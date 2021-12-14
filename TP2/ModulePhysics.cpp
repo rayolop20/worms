@@ -19,23 +19,95 @@ bool ModulePhysics::Start()
 {
 	LOG("Creating Physics 2D environment");
 
-	// TODO 2: Create a private variable for the world
-	// - You need to send it a default gravity
-	// - You need init the world in the constructor
-	// - Remember to destroy the world after using it
+	ball.mass = 10; // kg
+	ball.surface = 2; // m^2
+	ball.cd = 0.4;
+	ball.cl = 1.2;
 
-
-	// TODO 4: Create a a big static circle as "ground"
+	//position
+	ball.X = ball.Y = 10.0;
+	ball.Vx = 0;
+	ball.Vy = 0;
+	ball.radi = 5;
 	return true;
 }
 
 // 
 update_status ModulePhysics::PreUpdate()
 {
-	// TODO 3: Update the simulation ("step" the world)
+		/*1->Forces->Fg, Fd, Fc, Fb, Fk
+	2->2a LL Newton -> SumF = m*a
+	3-> INTEGRADOR
+		-Euler:
+			-BWD Xt = v*dt
+			-FWD Vt = a*dt
+		-Verlet -> Veloc
+				Xt = v*dt + 1/2 adt^2
+				Vt = a*dt
+	4-> COLISIONS*/
+	return UPDATE_CONTINUE;
+}
+
+update_status ModulePhysics::Update() {
+
+	CreateCircle(ball.X, ball.Y, ball.radi);
+	
+	ball.fx = ball.fy = 0.0;
+	ball.accx = ball.accy = 0.0;
+
+	//1#compute forces
+	{
+		
+
+		//init grav
+		float fgx = ball.mass * 0.0;
+		float fgy = ball.mass * 1.0; // Let's assume gravity is constant and downwards
+
+		//add grav
+		ball.fx += fgx;
+		ball.fy += fgy;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+
+		ball.fx += 100;
+	}
+	//2# Llei newton F=m*a
+	{
+		ball.accx = ball.fx / ball.mass;
+		ball.accy = ball.fy / ball.mass;
+	}
+	
+	//3#integrate
+	{
+		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+		{
+			if (ball.physenable == false)
+			{
+				ball.physenable = true;
+			}
+			else
+			{
+				ball.physenable = false;
+			}
+		}
+
+		if (ball.physenable == true)
+			{
+				integratorVerlet(ball, Delta);
+			}
+	}
+
+
 
 	return UPDATE_CONTINUE;
 }
+
+PhysBody* ModulePhysics::CreateCircle(float x, float y, float radius)
+{
+	App->renderer->DrawCircle(x,y,radius, 0,255,0);
+	return nullptr;
+}
+
 
 // 
 update_status ModulePhysics::PostUpdate()
@@ -83,4 +155,12 @@ bool ModulePhysics::CleanUp()
 	// Delete the whole physics world!
 
 	return true;
+}
+
+void ModulePhysics::integratorVerlet(Ball& ball, float dt)
+{
+	ball.X += ball.Vx * dt + 0.5 * ball.accx * dt * dt;
+	ball.Y += ball.Vy * dt + 0.5 * ball.accy * dt * dt;
+	ball.Vx += ball.accx * dt;
+	ball.Vy += ball.accy * dt;
 }

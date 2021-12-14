@@ -1,6 +1,14 @@
-#include <stdlib.h>
 #include "Application.h"
 #include "Globals.h"
+
+#include <stdlib.h>
+#include <time.h>
+#include <stdlib.h>
+
+#include <iostream>
+#include <chrono>
+#include <stack>
+using namespace std;
 
 #include "SDL/include/SDL.h"
 #pragma comment( lib, "SDL/libx86/SDL2.lib" )
@@ -18,13 +26,14 @@ enum main_states
 int main(int argc, char ** argv)
 {
 	LOG("Starting game '%s'...", TITLE);
-
+	float dt = 16.0;
 	int main_return = EXIT_FAILURE;
 	main_states state = MAIN_CREATION;
 	Application* App = NULL;
 
 	while (state != MAIN_EXIT)
 	{
+		auto start = chrono::steady_clock::now();
 		switch (state)
 		{
 		case MAIN_CREATION:
@@ -79,6 +88,11 @@ int main(int argc, char ** argv)
 
 			break;
 
+		}
+		auto end = chrono::steady_clock::now();
+		auto CelapsetTime = chrono::duration_cast<chrono::milliseconds>(end - start).count();
+		if (dt - CelapsetTime > 0.0f) {
+			Sleep(dt - CelapsetTime);
 		}
 	}
 
