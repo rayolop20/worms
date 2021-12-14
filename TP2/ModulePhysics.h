@@ -13,6 +13,7 @@ public:
 	update_status PostUpdate();
 	update_status Update();
 	PhysBody* CreateCircle(float x, float y, float radius);
+	PhysBody* CreateRectangle(int x, int y, float rotation);
 	
 	bool CleanUp();
 
@@ -21,9 +22,6 @@ public:
 	class Ball
 	{
 	public:
-
-		float speed(float Fx, float Fy);
-
 		float radi;
 		//position
 		float X;
@@ -32,9 +30,6 @@ public:
 		//velocity
 		float Vy;
 		float Vx;
-
-		//speed
-		float sp;
 
 		//force
 		float fx;
@@ -60,7 +55,34 @@ public:
 		bool physenable = false;
 	}ball;
 
-	void integratorVerlet(Ball& ball, float dt);
+
+	class Player_Cannon //dont need Y because only is moving on X
+	{
+	public:
+		//position
+		float X;
+		float Y;
+		float Angle;
+
+		//velocity
+		float Vx;
+
+		//force
+		float fx;
+
+		//impulse force
+		float fimpx;
+
+		//accel
+		float accx;
+
+		//mass
+		float mass;
+
+	}Player;
+
+	void integratorVerletBall(Ball& ball, float dt);
+	void integratorVerletPlayer(Player_Cannon& player, float dt);
 
 private:
 
