@@ -24,25 +24,9 @@ public:
 
 	bool Start();
 	update_status Update();
+	update_status PostUpdate();
 	bool CleanUp();
 
 public:
-	int PlayerX, PlayerY=550;
 
-	Object ball;
-	Object flipper1;
-	Object flipper2;
-	Object spring;
-	
-
-	PhysBody* flipper1_wheel;
-	PhysBody* flipper2_wheel;
-	PhysBody* spring_wheel;
-
-	Object flipper_up1;
-	Object flipper_up2;
-	PhysBody* flipper_up1_wheel;
-	PhysBody* flipper_up2_wheel;
-
-	PhysBody* sensor1;
 };

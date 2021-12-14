@@ -50,7 +50,7 @@ update_status ModulePhysics::PreUpdate()
 
 update_status ModulePhysics::Update() {
 
-	CreateCircle(ball.X, ball.Y, ball.radi);
+
 	
 	ball.fx = ball.fy = 0.0;
 	ball.accx = ball.accy = 0.0;

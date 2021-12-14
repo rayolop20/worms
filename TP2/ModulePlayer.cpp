@@ -31,7 +31,13 @@ bool ModulePlayer::CleanUp()
 // Update: draw background
 update_status ModulePlayer::Update()
 {
-	
+
+	return UPDATE_CONTINUE;
+}
+
+update_status ModulePlayer::PostUpdate()
+{
+	App->physics->CreateCircle(App->physics->ball.X, App->physics->ball.Y, App->physics->ball.radi);
 	return UPDATE_CONTINUE;
 }
 
