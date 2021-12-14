@@ -23,7 +23,7 @@ bool ModulePhysics::Start()
 	ball.surface = 2; // m^2
 	ball.mass = ball.surface * 5; // kg
 	ball.cd = 0.4;
-	ball.cl = 1.2;
+	ball.cl = 0.1;
 
 	//position
 	ball.X = 50.0;
@@ -54,21 +54,25 @@ update_status ModulePhysics::Update() {
 
 	ball.fx = ball.fy = 0.0;
 	ball.accx = ball.accy = 0.0;
+	ball.fdragx = 0.0;
+	ball.fdragy = 0.0;
 	if (ball.physenable == true) {
 		ball.fimpx = 0.0;
 		ball.fimpy = 0.0;
 	}
+	
 	//1#compute forces
 	{
 		
 		//init grav
 		float fgx = ball.mass * 0.0;
-		float fgy = ball.mass * 2.0; // Let's assume gravity is constant and downwards
+		float fgy = ball.mass * 10.0; // Let's assume gravity is constant and downwards
 
 		//add grav
 		ball.fx += fgx;
 		ball.fy += fgy;
 
+		
 	}
 	
 	//2# Llei newton F=m*a
@@ -81,16 +85,31 @@ update_status ModulePhysics::Update() {
 	{
 		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 
-			ball.fimpx += 50;
+			//ball.fimpx += 50;
+			ball.fimpx = 1000;
 		}
 		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
 
-			ball.fimpy -= 50;
+			//ball.fimpy -= 50;
+			ball.fimpy = -1000;
 		}
 
-		//add impulse force
+		if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN || ball.parachute == true) {
+			ball.parachute = true;
+			ball.fdragy = ball.radi * ball.Vy * 0.1;
+			ball.fdragx = ball.radi * ball.Vx * 0.1;
+		}
+
+		if (ball.parachute == true) {
+
+			
+		}
+		//Add impulse force
 		ball.accx += ball.fimpx;
 		ball.accy += ball.fimpy;
+		//add drag force
+		ball.accx -= ball.fdragx;
+		ball.accy -= ball.fdragy;
 
 		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 		{

@@ -56,8 +56,13 @@ public:
 		float cl; // Lift coefficient
 		float cd; // Drag coefficient
 
+		float fdragx;
+		float fdragy;
+
 		//has fisic enable?
 		bool physenable = false;
+		bool parachute = false;
+		bool parachute_ = true;
 	}ball;
 
 	void integratorVerlet(Ball& ball, float dt);
