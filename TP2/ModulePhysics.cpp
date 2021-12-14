@@ -19,13 +19,15 @@ bool ModulePhysics::Start()
 {
 	LOG("Creating Physics 2D environment");
 
-	ball.mass = 10; // kg
+	
 	ball.surface = 2; // m^2
+	ball.mass = ball.surface * 5; // kg
 	ball.cd = 0.4;
 	ball.cl = 1.2;
 
 	//position
-	ball.X = ball.Y = 10.0;
+	ball.X = 50.0;
+	ball.Y = 700.0;
 	ball.Vx = 0;
 	ball.Vy = 0;
 	ball.radi = 5;
@@ -50,27 +52,25 @@ update_status ModulePhysics::PreUpdate()
 
 update_status ModulePhysics::Update() {
 
-
-	
 	ball.fx = ball.fy = 0.0;
 	ball.accx = ball.accy = 0.0;
-
+	if (ball.physenable == true) {
+		ball.fimpx = 0.0;
+		ball.fimpy = 0.0;
+	}
 	//1#compute forces
 	{
 		
-
 		//init grav
 		float fgx = ball.mass * 0.0;
-		float fgy = ball.mass * 1.0; // Let's assume gravity is constant and downwards
+		float fgy = ball.mass * 2.0; // Let's assume gravity is constant and downwards
 
 		//add grav
 		ball.fx += fgx;
 		ball.fy += fgy;
-	}
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 
-		ball.fx += 100;
 	}
+	
 	//2# Llei newton F=m*a
 	{
 		ball.accx = ball.fx / ball.mass;
@@ -79,6 +79,19 @@ update_status ModulePhysics::Update() {
 	
 	//3#integrate
 	{
+		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+
+			ball.fimpx += 50;
+		}
+		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+
+			ball.fimpy -= 50;
+		}
+
+		//add impulse force
+		ball.accx += ball.fimpx;
+		ball.accy += ball.fimpy;
+
 		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 		{
 			if (ball.physenable == false)
@@ -91,12 +104,13 @@ update_status ModulePhysics::Update() {
 			}
 		}
 
+		
+
 		if (ball.physenable == true)
 			{
 				integratorVerlet(ball, Delta);
 			}
 	}
-
 
 
 	return UPDATE_CONTINUE;

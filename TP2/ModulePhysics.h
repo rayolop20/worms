@@ -40,6 +40,10 @@ public:
 		float fx;
 		float fy;
 
+		//impulse force
+		float fimpx;
+		float fimpy;
+
 		//accel
 		float accx;
 		float accy;
