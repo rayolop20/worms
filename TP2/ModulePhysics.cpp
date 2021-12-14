@@ -19,22 +19,35 @@ bool ModulePhysics::Start()
 {
 	LOG("Creating Physics 2D environment");
 
-	
-	ball.surface = 2; // m^2
-	ball.mass = ball.surface * 5; // kg
-	ball.cd = 0.4;
-	ball.cl = 0.1;
 
-	//position
-	ball.X = 50.0;
-	ball.Y = 700.0;
-	ball.Vx = 0;
-	ball.Vy = 0;
-	ball.radi = 5;
+
+
+//player iniciation:
+	{
+		Player.mass = 20;
+		//position
+		Player.X = 50;
+		Player.Y = 700;
+		Player.Vx = 0;
+	}
+//ball iniciation:
+	{
+		ball.surface = 2; // m^2
+		ball.mass = ball.surface * 5; // kg
+		ball.cd = 0.4;
+		ball.cl = 0.1;
+
+		//position
+		ball.X = Player.X + 50;
+		ball.Y = Player.Y;
+		ball.Vx = 0;
+		ball.Vy = 0;
+		ball.radi = 5;
+	}
 	return true;
 }
 
-// 
+//
 update_status ModulePhysics::PreUpdate()
 {
 		/*1->Forces->Fg, Fd, Fc, Fb, Fk
@@ -60,89 +73,94 @@ update_status ModulePhysics::Update() {
 		ball.fimpx = 0.0;
 		ball.fimpy = 0.0;
 	}
-	
+
 	//1#compute forces
 	{
-		
+
 		//init grav
 		float fgx = ball.mass * 0.0;
 		float fgy = ball.mass * 10.0; // Let's assume gravity is constant and downwards
 
-		//add grav
 		ball.fx += fgx;
 		ball.fy += fgy;
-
-		
 	}
-	
+
 	//2# Llei newton F=m*a
 	{
 		ball.accx = ball.fx / ball.mass;
 		ball.accy = ball.fy / ball.mass;
 	}
-	
+
 	//3#integrate
-	{
-		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 
-			//ball.fimpx += 50;
-			ball.fimpx = 1000;
-		}
-		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 
-			//ball.fimpy -= 50;
-			ball.fimpy = -1000;
-		}
+		//ball.fimpx += 50;
+		ball.fimpx = 1000;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+		//ball.fimpy -= 50;
+		ball.fimpy = -1000;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN || ball.parachute == true) {
 
-		if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN || ball.parachute == true) {
-			ball.parachute = true;
-			ball.fdragy = ball.radi * ball.Vy * 0.1;
-			ball.fdragx = ball.radi * ball.Vx * 0.1;
-		}
-
-		if (ball.parachute == true) {
-
-			
-		}
-		//Add impulse force
-		ball.accx += ball.fimpx;
-		ball.accy += ball.fimpy;
-		//add drag force
-		ball.accx -= ball.fdragx;
-		ball.accy -= ball.fdragy;
-
-		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
-		{
-			if (ball.physenable == false)
-			{
-				ball.physenable = true;
-			}
-			else
-			{
-				ball.physenable = false;
-			}
-		}
-
-		
-
-		if (ball.physenable == true)
-			{
-				integratorVerlet(ball, Delta);
-			}
+		ball.parachute = true;
+		ball.fdragy = ball.radi * ball.Vy * 0.1;
+		ball.fdragx = ball.radi * ball.Vx * 0.1;
 	}
 
+	//Add impulse force
+	ball.accx += ball.fimpx;
+	ball.accy += ball.fimpy;
+	//add drag force
+	ball.accx -= ball.fdragx;
+	ball.accy -= ball.fdragy;
+	
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+	{
+		if (ball.physenable == false)
+		{
+			ball.physenable = true;
+		}
+		else
+		{
+			ball.physenable = false;
+		}
+	}
 
+	if (ball.physenable == true)
+	{
+		integratorVerletBall(ball, Delta);
+	}
+
+	//player update
+	{
+		Player.fx = 0.0;
+		Player.accx = 0.0;
+
+		//2# Llei newton F=m*a
+		{
+			Player.accx = Player.fx / Player.mass;
+		}
+	}
 	return UPDATE_CONTINUE;
 }
-
 PhysBody* ModulePhysics::CreateCircle(float x, float y, float radius)
 {
 	App->renderer->DrawCircle(x,y,radius, 0,255,0);
 	return nullptr;
 }
 
+PhysBody* ModulePhysics::CreateRectangle(int x, int y, float rotation)
+{
+	SDL_Rect player{x,y, 50,50};
+	App->renderer->DrawQuad(player, 0,255,0);
 
-// 
+	return nullptr;
+}
+
+
+//
 update_status ModulePhysics::PostUpdate()
 {
 	// TODO 5: On space bar press, create a circle on mouse position
@@ -190,10 +208,16 @@ bool ModulePhysics::CleanUp()
 	return true;
 }
 
-void ModulePhysics::integratorVerlet(Ball& ball, float dt)
+void ModulePhysics::integratorVerletBall(Ball& ball, float dt)
 {
-	ball.X += ball.Vx * dt + 0.5 * ball.accx * dt * dt;
-	ball.Y += ball.Vy * dt + 0.5 * ball.accy * dt * dt;
-	ball.Vx += ball.accx * dt;
-	ball.Vy += ball.accy * dt;
+		ball.X += ball.Vx * dt + 0.5 * ball.accx * dt * dt;
+		ball.Y += ball.Vy * dt + 0.5 * ball.accy * dt * dt;
+		ball.Vx += ball.accx * dt;
+		ball.Vy += ball.accy * dt;
+}
+
+void ModulePhysics::integratorVerletPlayer(Player_Cannon& player, float dt)
+{
+	player.X += player.Vx * dt + 0.5 * player.accx * dt * dt;
+	player.Vx += player.accx * dt;
 }
