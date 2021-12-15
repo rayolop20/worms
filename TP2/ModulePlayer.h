@@ -28,6 +28,8 @@ public:
 	bool CleanUp();
 
 public:
+	int rondacompt = 0;
+	int rondacompt2 = 0;
 	bool players = false;
 	SDL_Texture* Cannon = nullptr;
 	SDL_Texture* Tank = nullptr;

@@ -83,12 +83,19 @@ update_status ModulePhysics::Update() {
 		ball.fimpx = 0.0;
 		ball.fimpy = 0.0;
 	}
-	if (ball.physenable == false) {
-		ball.X = Player.X + 50;
-		ball.Y = Player.Y;
 
-		ball.X = Player2.X + 50;
-		ball.Y = Player2.Y;
+	if (ball.physenable == false) {
+		if (App->player->players == false)
+		{
+			ball.X = Player.X + 50;
+			ball.Y = Player.Y;
+		}
+		if (App->player->players == true)
+		{
+			ball.X = Player2.X;
+			ball.Y = Player2.Y;
+		}
+		
 	}
 	//1#compute forces
 	{
@@ -188,30 +195,9 @@ update_status ModulePhysics::Update() {
 	ball.accx += ball.fdragx;
 	ball.accy += ball.fdragy;
 	
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN )
 	{
-		if (ball.physenable == false)
-		{
 			ball.physenable = true;
-		}
-		else
-		{
-			ball.physenable = false;
-		}
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
-	{
-
-		if (App->player->players == false)
-		{
-			App->player->players = true;
-
-		}
-		else
-		{
-			App->player->players = false;
-		}
 	}
 
 	DrawColisions();
@@ -239,6 +225,18 @@ update_status ModulePhysics::Update() {
 		{
 			Player.accx = Player.fx / Player.mass;
 			Player2.accx = Player2.fx / Player2.mass;
+		}
+	}
+
+	//reset ball
+	if (ball.X > 1000 || ball.X < 0)
+	{
+		ball.physenable = false;
+		if (App->player->players == true) {//Canviar de jugador
+			App->player->players = false;
+		}
+		else if (App->player->players == false) {//Canviar de jugador
+			App->player->players = true;
 		}
 	}
 	return UPDATE_CONTINUE;
