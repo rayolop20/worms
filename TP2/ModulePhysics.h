@@ -63,6 +63,10 @@ public:
 		bool physenable = false;
 		//Parachute enable?
 		bool parachute = false;
+
+		//prev position
+		float prev_positionX;
+		float prev_positionY;
 		//Colisions stuff
 	}ball;
 

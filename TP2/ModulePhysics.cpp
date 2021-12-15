@@ -29,19 +29,21 @@ bool ModulePhysics::Start()
 	}
 //ball iniciation:
 	{
-		ball.surface = 2; // m^2
+		ball.radi = 5;
+		ball.surface = ball.radi*2; // m^2
 		ball.mass = ball.surface * 5; // kg
 		ball.cd = 0.4;
 		ball.cl = 0.1;
 		ball.cs1 = 0.85;
 		ball.cs2 = 0.7;
-		ball.surfaceRect = 25;
+		
 
 		//position
 		
 		ball.Vx = 0;
 		ball.Vy = 0;
-		ball.radi = 5;
+		
+		ball.surfaceRect = ball.radi * 5;
 	}
 	return true;
 }
@@ -112,25 +114,35 @@ update_status ModulePhysics::Update() {
 	}
 	
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-		ball.fimpy -= 50;
+		ball.fimpy += 50;
 		Player.Angle++;
 		//ball.fimpy = -1000;
 	}
-	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN || ball.parachute == true) {
+	if ((App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN || ball.parachute == true) && (ball.Y > ball.prev_positionY)) {
 
 		ball.parachute = true;
 		SDL_Rect parachueRect = { ball.X - 2.5 * ball.radi,ball.Y - 4.5 * ball.radi,ball.surfaceRect,ball.surfaceRect / 5 };
 		App->renderer->DrawQuad(parachueRect, 0, 255, 0);
-		ball.fdragy = ball.surfaceRect / 5 * ball.Vy * 0.1;
-		ball.fdragx = ball.surfaceRect / 5 * ball.Vx * 0.1;		
+		
+		ball.fdragy = ball.surfaceRect / 5 - ball.mass * 0.3;
+		
+		
+		if (ball.X < ball.prev_positionX) {
+			ball.fdragx = ball.surfaceRect / 50 + ball.mass * 0.1;
+		}
+		if(ball.X > ball.prev_positionX) {
+			ball.fdragx = -ball.surfaceRect / 50 - ball.mass * 0.1;
+		}
+		
+			
 	}
 
 	//Add impulse force
 	ball.accx += ball.fimpx;
 	ball.accy += ball.fimpy;
 	//add drag force
-	ball.accx -= ball.fdragx;
-	ball.accy -= ball.fdragy;
+	ball.accx += ball.fdragx;
+	ball.accy += ball.fdragy;
 	
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
@@ -150,7 +162,10 @@ update_status ModulePhysics::Update() {
 
 	if (ball.physenable == true)
 	{
+		ball.prev_positionX = ball.X;
+		ball.prev_positionY = ball.Y;
 		integratorVerletBall(ball, Delta);
+		
 	}
 	
 	//player update
@@ -301,8 +316,9 @@ void ModulePhysics::OnColision(Ball& ball, float walls[])
 		if (ball.X > PPup[i] && ball.X  < PPup[i] + PPup[i + 2] && ball.Y > PPup[i + 1] - 10 && ball.Y < PPup[i + 1] + PPup[i + 3] - 10
 			|| ball.X > PPup[i] && ball.X < PPup[i] + PPup[i + 2] && ball.Y > PPup[i + 1] && ball.Y < PPup[i + 1] + PPup[i + 3]) {
 				ball.radi = 15;
-				ball.mass = ball.surface * 15;
-
+				ball.surface = ball.radi * 2;
+				ball.mass = 2000;
+				ball.surfaceRect = ball.radi * 5;
 				App->renderer->DrawCircle(200, 100, 100, 250, 250, 250);
 		}
 	}
