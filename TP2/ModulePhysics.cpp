@@ -138,7 +138,7 @@ update_status ModulePhysics::Update() {
 		}
 	}
 	DrawColisions();
-	OnColision(walls);
+	OnColision(ball, walls);
 	if (ball.physenable == true)
 	{
 		integratorVerletBall(ball, Delta);
@@ -246,7 +246,7 @@ void ModulePhysics::DrawColisions()
 
 }
 
-void ModulePhysics::OnColision(float walls[])
+void ModulePhysics::OnColision(Ball& ball, float walls[])
 {//0,600,1100,400
 	for (int i = 0; i < 16; i += 4) {
 		if (ball.X > walls[i] && ball.X  < walls[i] + walls[i+2] && ball.Y > walls[i + 1] - 10 && ball.Y < walls[i + 1] + walls[i + 3] - 10

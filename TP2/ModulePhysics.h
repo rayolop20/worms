@@ -99,7 +99,7 @@ public:
 	void integratorVerletBall(Ball& ball, float dt);
 	void integratorVerletPlayer(Player_Cannon& player, float dt);
 	void DrawColisions();
-	void OnColision(float walls[]);
+	void OnColision(Ball& ball, float walls[]);
 
 private:
 
