@@ -202,6 +202,7 @@ update_status ModulePhysics::Update() {
 
 	DrawColisions();
 	OnColision(ball, walls);
+	OnColisionPlayers(Player,Player2 , walls);
 	OnColisionPPup(ball, PowerUPP);
 
 	if (ball.physenable == true)
@@ -324,6 +325,7 @@ void ModulePhysics::integratorVerletPlayer2(Player_Cannon2& player2, float dt)
 	player2.Vx += player2.accx * dt;
 }
 
+
 void ModulePhysics::DrawColisions()
 {
 	SDL_Rect rect1 = { 0,700,1030,100 };
@@ -359,23 +361,22 @@ void ModulePhysics::OnColision(Ball& ball, float walls[])
 				ball.Vx *= ball.cs1;
 				App->renderer->DrawCircle(100, 100, 50, 250, 250, 250);
 			}
-
-			if (ball.X > walls[i] -10 && ball.X < walls[i] + walls[i+2] +10 && ball.Y > walls[i+1] && ball.Y < walls[i+1] + walls[i+3] - 10) {
-				if (ball.X > walls[i] + walls[i+2]-10) {
-					ball.X += 2;
-				}
-				else {
-					ball.X -= 2;
-				}
-				
-				ball.Vx *= -ball.cs2;
-				ball.Vy *= ball.cs1;
-				App->renderer->DrawCircle(200, 100, 100, 250, 250, 250);
+			
+		if (ball.X > walls[i] -10 && ball.X < walls[i] + walls[i+2] +10 && ball.Y > walls[i+1] && ball.Y < walls[i+1] + walls[i+3] - 10) {
+			if (ball.X > walls[i] + walls[i+2]-10) {
+				ball.X += 2;
+			}
+			else {
+				ball.X -= 2;
 			}
 			
+			ball.Vx *= -ball.cs2;
+			ball.Vy *= ball.cs1;
+			App->renderer->DrawCircle(200, 100, 100, 250, 250, 250);
 		}
+			
 	}
-
+}
 
 }void ModulePhysics::OnColisionPPup(Ball& ball, float PPup[])
 {//0,600,1100,400
@@ -388,6 +389,17 @@ void ModulePhysics::OnColision(Ball& ball, float walls[])
 				//ball.density = ball.mass * ball.surface;
 				ball.surfaceRect = ball.radi * 5/3;
 				App->renderer->DrawCircle(200, 100, 100, 250, 250, 250);
+		}
+	}
+}
+
+void ModulePhysics::OnColisionPlayers(Player_Cannon& player, Player_Cannon2& player2, float walls[]) {
+	for (int i = 0; i < 16; i += 4) {
+		if ((player.X) >= walls[i + 1] - 5 && (player.Y <= (walls[i + 1]) + (walls[i + 3]) + 5) && player.X + 50 >= walls[i] && player.X <= walls[i] + walls[i + 2]) {
+			player.Vx = 0;
+		}
+		if ((player2.X) >= walls[i + 1] - 5 && (player2.Y <= (walls[i + 1]) + (walls[i + 3]) + 5) && player2.X + 50 >= walls[i] && player2.X <= walls[i] + walls[i + 2]) {
+			player2.Vx = 0;
 		}
 	}
 }

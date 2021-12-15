@@ -141,6 +141,7 @@ public:
 	void DrawColisions();
 	void OnColision(Ball& ball, float walls[]);
 	void OnColisionPPup(Ball& ball, float PPups[]);
+	void OnColisionPlayers(Player_Cannon& player, Player_Cannon2& player2, float walls[]);
 
 private:
 
