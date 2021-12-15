@@ -28,5 +28,7 @@ public:
 	bool CleanUp();
 
 public:
+	SDL_Texture* Cannon = nullptr;
+	SDL_Texture* Tank = nullptr;
 
 };

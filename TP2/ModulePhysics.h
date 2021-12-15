@@ -80,9 +80,11 @@ public:
 
 		//force
 		float fx;
+		float fy;
 
 		//impulse force
 		float fimpx;
+		float fimpy;
 
 		//accel
 		float accx;
@@ -93,14 +95,17 @@ public:
 	}Player;
 
 	float walls[16] = { 0,700,1030,100,
-						0,300,1030,100,
+						0,0,1030,100,
 						900,500,100,500,
 						100,500,100,500};
+
+	float PowerUPP[4] = { 700,200, 40, 40 };
 
 	void integratorVerletBall(Ball& ball, float dt);
 	void integratorVerletPlayer(Player_Cannon& player, float dt);
 	void DrawColisions();
 	void OnColision(Ball& ball, float walls[]);
+	void OnColisionPPup(Ball& ball, float PPups[]);
 
 private:
 

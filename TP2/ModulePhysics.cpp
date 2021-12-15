@@ -19,9 +19,6 @@ bool ModulePhysics::Start()
 {
 	LOG("Creating Physics 2D environment");
 
-
-
-
 //player iniciation:
 	{
 		Player.mass = 20;
@@ -110,6 +107,13 @@ update_status ModulePhysics::Update() {
 	}
 	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
 		ball.fimpy -= 50;
+		Player.Angle--;
+		//ball.fimpy = -1000;
+	}
+	
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+		ball.fimpy -= 50;
+		Player.Angle++;
 		//ball.fimpy = -1000;
 	}
 	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN || ball.parachute == true) {
@@ -139,8 +143,11 @@ update_status ModulePhysics::Update() {
 			ball.physenable = false;
 		}
 	}
+
 	DrawColisions();
 	OnColision(ball, walls);
+	OnColisionPPup(ball, PowerUPP);
+
 	if (ball.physenable == true)
 	{
 		integratorVerletBall(ball, Delta);
@@ -239,12 +246,15 @@ void ModulePhysics::DrawColisions()
 {
 	SDL_Rect rect1 = { 0,700,1030,100 };
 	App->renderer->DrawQuad(rect1, 255, 0, 0);
-	SDL_Rect rect2 = { 0,300,1030,100 };
+	SDL_Rect rect2 = { 0,-5,1030,100 };
 	App->renderer->DrawQuad(rect2, 255, 0, 0);
 	SDL_Rect rect3 = { 900,500,100,500 };
 	App->renderer->DrawQuad(rect3, 255, 0, 0);
 	SDL_Rect rect4 = { 100,500,100,500 };
 	App->renderer->DrawQuad(rect4, 255, 0, 0);
+	
+	SDL_Rect PPup = { 700,200, 40, 40 };
+	App->renderer->DrawQuad(PPup, 0, 0, 255);
 
 }
 
@@ -280,6 +290,20 @@ void ModulePhysics::OnColision(Ball& ball, float walls[])
 				ball.Vy *= ball.cs1;
 				App->renderer->DrawCircle(200, 100, 100, 250, 250, 250);
 			}
+			
+		}
+	}
+
+
+}void ModulePhysics::OnColisionPPup(Ball& ball, float PPup[])
+{//0,600,1100,400
+	for (int i = 0; i < 16; i += 4) {
+		if (ball.X > PPup[i] && ball.X  < PPup[i] + PPup[i + 2] && ball.Y > PPup[i + 1] - 10 && ball.Y < PPup[i + 1] + PPup[i + 3] - 10
+			|| ball.X > PPup[i] && ball.X < PPup[i] + PPup[i + 2] && ball.Y > PPup[i + 1] && ball.Y < PPup[i + 1] + PPup[i + 3]) {
+				ball.radi = 15;
+				ball.mass = ball.surface * 15;
+
+				App->renderer->DrawCircle(200, 100, 100, 250, 250, 250);
 		}
 	}
 }
