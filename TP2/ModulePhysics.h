@@ -48,6 +48,7 @@ public:
 
 		//aerodinamics
 		float surface; // Effective wet surface
+		float surfaceRect;
 		float cl; // Lift coefficient
 		float cd; // Drag coefficient
 		// String coeficients

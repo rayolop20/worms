@@ -38,7 +38,7 @@ bool ModulePhysics::Start()
 		ball.cl = 0.1;
 		ball.cs1 = 0.85;
 		ball.cs2 = 0.7;
-		
+		ball.surfaceRect = 25;
 
 		//position
 		
@@ -115,8 +115,10 @@ update_status ModulePhysics::Update() {
 	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN || ball.parachute == true) {
 
 		ball.parachute = true;
-		ball.fdragy = ball.radi * ball.Vy * 0.1;
-		ball.fdragx = ball.radi * ball.Vx * 0.1;
+		SDL_Rect parachueRect = { ball.X - 2.5 * ball.radi,ball.Y - 4.5 * ball.radi,ball.surfaceRect,ball.surfaceRect / 5 };
+		App->renderer->DrawQuad(parachueRect, 0, 255, 0);
+		ball.fdragy = ball.surfaceRect / 5 * ball.Vy * 0.1;
+		ball.fdragx = ball.surfaceRect / 5 * ball.Vx * 0.1;		
 	}
 
 	//Add impulse force
