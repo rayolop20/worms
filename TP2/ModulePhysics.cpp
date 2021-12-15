@@ -393,7 +393,7 @@ void ModulePhysics::OnColision(Ball& ball, float walls[])
 	}
 }
 
-void ModulePhysics::OnColisionPlayers(Player_Cannon& player, Player_Cannon2& player2, float walls[]) {
+/*void ModulePhysics::OnColisionPlayers(Player_Cannon& player, Player_Cannon2& player2, float walls[]) {
 	for (int i = 0; i < 16; i += 4) {
 		if ((player.X) >= walls[i + 1] - 5 && (player.Y <= (walls[i + 1]) + (walls[i + 3]) + 5) && player.X + 50 >= walls[i] && player.X <= walls[i] + walls[i + 2]) {
 			player.Vx = 0;
@@ -402,4 +402,4 @@ void ModulePhysics::OnColisionPlayers(Player_Cannon& player, Player_Cannon2& pla
 			player2.Vx = 0;
 		}
 	}
-}
+}*/
