@@ -26,8 +26,8 @@ bool ModulePhysics::Start()
 	{
 		Player.mass = 20;
 		//position
-		Player.X = 50;
-		Player.Y = 700;
+		Player.X = 450;
+		Player.Y = 650;
 		Player.Vx = 0;
 	}
 //ball iniciation:
@@ -36,10 +36,12 @@ bool ModulePhysics::Start()
 		ball.mass = ball.surface * 5; // kg
 		ball.cd = 0.4;
 		ball.cl = 0.1;
+		ball.cs1 = 0.85;
+		ball.cs2 = 0.7;
+		
 
 		//position
-		ball.X = Player.X + 50;
-		ball.Y = Player.Y;
+		
 		ball.Vx = 0;
 		ball.Vy = 0;
 		ball.radi = 5;
@@ -73,7 +75,10 @@ update_status ModulePhysics::Update() {
 		ball.fimpx = 0.0;
 		ball.fimpy = 0.0;
 	}
-
+	if (ball.physenable == false) {
+		ball.X = Player.X + 50;
+		ball.Y = Player.Y;
+	}
 	//1#compute forces
 	{
 
@@ -95,12 +100,17 @@ update_status ModulePhysics::Update() {
 
 	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 
-		//ball.fimpx += 50;
-		ball.fimpx = 1000;
+		ball.fimpx += 50;
+		//ball.fimpx = 1000;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+
+		ball.fimpx -= 50;
+		//ball.fimpx = 1000;
 	}
 	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-		//ball.fimpy -= 50;
-		ball.fimpy = -1000;
+		ball.fimpy -= 50;
+		//ball.fimpy = -1000;
 	}
 	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN || ball.parachute == true) {
 
@@ -127,12 +137,13 @@ update_status ModulePhysics::Update() {
 			ball.physenable = false;
 		}
 	}
-
+	DrawColisions();
+	OnColision(walls);
 	if (ball.physenable == true)
 	{
 		integratorVerletBall(ball, Delta);
 	}
-
+	
 	//player update
 	{
 		Player.fx = 0.0;
@@ -220,4 +231,53 @@ void ModulePhysics::integratorVerletPlayer(Player_Cannon& player, float dt)
 {
 	player.X += player.Vx * dt + 0.5 * player.accx * dt * dt;
 	player.Vx += player.accx * dt;
+}
+
+void ModulePhysics::DrawColisions()
+{
+	SDL_Rect rect1 = { 0,700,1030,100 };
+	App->renderer->DrawQuad(rect1, 255, 0, 0);
+	SDL_Rect rect2 = { 0,300,1030,100 };
+	App->renderer->DrawQuad(rect2, 255, 0, 0);
+	SDL_Rect rect3 = { 900,500,100,500 };
+	App->renderer->DrawQuad(rect3, 255, 0, 0);
+	SDL_Rect rect4 = { 100,500,100,500 };
+	App->renderer->DrawQuad(rect4, 255, 0, 0);
+
+}
+
+void ModulePhysics::OnColision(float walls[])
+{//0,600,1100,400
+	for (int i = 0; i < 16; i += 4) {
+		if (ball.X > walls[i] && ball.X  < walls[i] + walls[i+2] && ball.Y > walls[i + 1] - 10 && ball.Y < walls[i + 1] + walls[i + 3] - 10
+			|| ball.X > walls[i] && ball.X < walls[i] + walls[i + 2] && ball.Y > walls[i + 1] && ball.Y < walls[i + 1] + walls[i + 3]) {
+			
+			if ((ball.X > walls[i] + 10 && ball.X < walls[i] + walls[i + 2] - 10 && ball.Y - ball.radi > walls[i + 1] - 10 && ball.Y + ball.radi < walls[i + 1] + walls[i + 3] +  10)
+				|| (ball.X > walls[i] + 10 && ball.X < walls[i] + walls[i + 2] - 10 && ball.Y > walls[i + 1] - 10 && ball.Y < walls[i + 1] + walls[i + 3] + 10)) {
+				if (ball.Y > walls[i+1] + walls[i+3] -10) {
+					ball.Y += 2;
+				}
+				else {
+					ball.Y -= 2;
+				}
+				
+				ball.Vy *= -ball.cs2;
+				ball.Vx *= ball.cs1;
+				App->renderer->DrawCircle(100, 100, 50, 250, 250, 250);
+			}
+
+			if (ball.X > walls[i] -10 && ball.X < walls[i] + walls[i+2] +10 && ball.Y > walls[i+1] && ball.Y < walls[i+1] + walls[i+3] - 10) {
+				if (ball.X > walls[i] + walls[i+2]-10) {
+					ball.X += 2;
+				}
+				else {
+					ball.X -= 2;
+				}
+				
+				ball.Vx *= -ball.cs2;
+				ball.Vy *= ball.cs1;
+				App->renderer->DrawCircle(200, 100, 100, 250, 250, 250);
+			}
+		}
+	}
 }

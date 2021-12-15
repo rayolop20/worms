@@ -50,14 +50,19 @@ public:
 		float surface; // Effective wet surface
 		float cl; // Lift coefficient
 		float cd; // Drag coefficient
+		// String coeficients
+		float cs1;
+		float cs2;
+		
 
 		float fdragx;
 		float fdragy;
 
 		//has fisic enable?
 		bool physenable = false;
+		//Parachute enable?
 		bool parachute = false;
-		bool parachute_ = true;
+		//Colisions stuff
 	}ball;
 
 
@@ -86,8 +91,15 @@ public:
 
 	}Player;
 
+	float walls[16] = { 0,700,1030,100,
+						0,300,1030,100,
+						900,500,100,500,
+						100,500,100,500};
+
 	void integratorVerletBall(Ball& ball, float dt);
 	void integratorVerletPlayer(Player_Cannon& player, float dt);
+	void DrawColisions();
+	void OnColision(float walls[]);
 
 private:
 
