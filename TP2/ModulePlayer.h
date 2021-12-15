@@ -28,7 +28,10 @@ public:
 	bool CleanUp();
 
 public:
+	bool players = false;
 	SDL_Texture* Cannon = nullptr;
 	SDL_Texture* Tank = nullptr;
+	SDL_Texture* Cannon2 = nullptr;
+	SDL_Texture* Tank2 = nullptr;
 
 };

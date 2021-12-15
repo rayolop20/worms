@@ -101,15 +101,43 @@ public:
 
 	}Player;
 
+	class Player_Cannon2 //dont need Y because only is moving on X
+	{
+	public:
+		//position
+		float X;
+		float Y;
+		float Angle;
+
+		//velocity
+		float Vx;
+
+		//force
+		float fx;
+		float fy;
+
+		//impulse force
+		float fimpx;
+		float fimpy;
+
+		//accel
+		float accx;
+
+		//mass
+		float mass;
+
+	}Player2;
+
 	float walls[16] = { 0,700,1030,100,
 						0,0,1030,100,
-						900,500,100,500,
-						100,500,100,500};
+						600,500,50,500,
+						300,500,50,500 };
 
 	float PowerUPP[4] = { 700,200, 40, 40 };
 
 	void integratorVerletBall(Ball& ball, float dt);
 	void integratorVerletPlayer(Player_Cannon& player, float dt);
+	void integratorVerletPlayer2(Player_Cannon2& player2, float dt);
 	void DrawColisions();
 	void OnColision(Ball& ball, float walls[]);
 	void OnColisionPPup(Ball& ball, float PPups[]);

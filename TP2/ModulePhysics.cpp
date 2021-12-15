@@ -21,11 +21,19 @@ bool ModulePhysics::Start()
 
 //player iniciation:
 	{
+		//player 1
 		Player.mass = 20;
 		//position
-		Player.X = 450;
+		Player.X = 100;
 		Player.Y = 650;
 		Player.Vx = 0;
+
+		//player 2
+		Player2.mass = 20;
+		//position
+		Player2.X = 800;
+		Player2.Y = 650;
+		Player2.Vx = 0;
 	}
 //ball iniciation:
 	{
@@ -78,6 +86,9 @@ update_status ModulePhysics::Update() {
 	if (ball.physenable == false) {
 		ball.X = Player.X + 50;
 		ball.Y = Player.Y;
+
+		ball.X = Player2.X + 50;
+		ball.Y = Player2.Y;
 	}
 	//1#compute forces
 	{
@@ -110,13 +121,43 @@ update_status ModulePhysics::Update() {
 	}
 	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
 		ball.fimpy -= 50;
-		Player.Angle--;
+		if (App->player->players == false)
+		{
+			if (Player.Angle > -60)
+			{
+				Player.Angle--;
+			}
+		}
+
+		if (App->player->players == true)
+		{
+			if (Player2.Angle < 60)
+			{
+				Player2.Angle++;
+			}
+
+		}
 		//ball.fimpy = -1000;
 	}
 	
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
 		ball.fimpy += 50;
-		Player.Angle++;
+		if (App->player->players == false)
+		{
+			if (Player.Angle < 20)
+			{
+				Player.Angle++;
+			}
+		}
+
+		if (App->player->players == true)
+		{
+			if (Player2.Angle > -20)
+			{
+				Player2.Angle--;
+			}
+		}
+
 		//ball.fimpy = -1000;
 	}
 	if ((App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN || ball.parachute == true) && (ball.Y > ball.prev_positionY)) {
@@ -159,6 +200,20 @@ update_status ModulePhysics::Update() {
 		}
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
+	{
+
+		if (App->player->players == false)
+		{
+			App->player->players = true;
+
+		}
+		else
+		{
+			App->player->players = false;
+		}
+	}
+
 	DrawColisions();
 	OnColision(ball, walls);
 	OnColisionPPup(ball, PowerUPP);
@@ -178,9 +233,12 @@ update_status ModulePhysics::Update() {
 		Player.fx = 0.0;
 		Player.accx = 0.0;
 
+		Player2.fx = 0.0;
+		Player2.accx = 0.0;
 		//2# Llei newton F=m*a
 		{
 			Player.accx = Player.fx / Player.mass;
+			Player2.accx = Player2.fx / Player2.mass;
 		}
 	}
 	return UPDATE_CONTINUE;
@@ -262,17 +320,23 @@ void ModulePhysics::integratorVerletPlayer(Player_Cannon& player, float dt)
 	player.Vx += player.accx * dt;
 }
 
+void ModulePhysics::integratorVerletPlayer2(Player_Cannon2& player2, float dt)
+{
+	player2.X += player2.Vx * dt + 0.5 * player2.accx * dt * dt;
+	player2.Vx += player2.accx * dt;
+}
+
 void ModulePhysics::DrawColisions()
 {
 	SDL_Rect rect1 = { 0,700,1030,100 };
 	App->renderer->DrawQuad(rect1, 255, 0, 0);
 	SDL_Rect rect2 = { 0,-5,1030,100 };
 	App->renderer->DrawQuad(rect2, 255, 0, 0);
-	SDL_Rect rect3 = { 900,500,100,500 };
+	SDL_Rect rect3 = { 600,500,50,500 };
 	App->renderer->DrawQuad(rect3, 255, 0, 0);
-	SDL_Rect rect4 = { 100,500,100,500 };
+	SDL_Rect rect4 = { 300,500,50,500 };
 	App->renderer->DrawQuad(rect4, 255, 0, 0);
-	
+
 	SDL_Rect PPup = { 700,200, 40, 40 };
 	App->renderer->DrawQuad(PPup, 0, 0, 255);
 
