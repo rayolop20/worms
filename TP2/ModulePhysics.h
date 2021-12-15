@@ -45,6 +45,7 @@ public:
 
 		//mass
 		float mass;
+		float density;
 
 		//aerodinamics
 		float surface; // Effective wet surface
@@ -67,6 +68,8 @@ public:
 		//prev position
 		float prev_positionX;
 		float prev_positionY;
+		float prev_velocityX;
+		float prev_velocityY;
 		//Colisions stuff
 	}ball;
 
