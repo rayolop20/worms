@@ -24,7 +24,7 @@ bool ModulePhysics::Start()
 		//player 1
 		Player.mass = 20;
 		//position
-		Player.X = 100;
+		Player.X = 400;
 		Player.Y = 650;
 		Player.Vx = 0;
 
@@ -393,13 +393,29 @@ void ModulePhysics::OnColision(Ball& ball, float walls[])
 	}
 }
 
-/*void ModulePhysics::OnColisionPlayers(Player_Cannon& player, Player_Cannon2& player2, float walls[]) {
+void ModulePhysics::OnColisionPlayers(Player_Cannon& player, Player_Cannon2& player2, float walls[]) {
 	for (int i = 0; i < 16; i += 4) {
-		if ((player.X) >= walls[i + 1] - 5 && (player.Y <= (walls[i + 1]) + (walls[i + 3]) + 5) && player.X + 50 >= walls[i] && player.X <= walls[i] + walls[i + 2]) {
+		/*0, 700, 1030, 100,
+			0, 0, 1030, 100,
+			600, 500, 50, 500,
+			300, 500, 50, 500*/
+		if (player.X + 50 > walls[i] && player.X < walls[i]+walls[i+2] && player.Y +50 > walls[i+1] && player.Y < walls[i+1] + walls[i+3]) {
 			player.Vx = 0;
+			if (player.X < walls[i]) {
+				player.X -= 2;
+			}
+			if (player.X + 50> walls[i] + walls[i + 2]) {
+				player.X += 2;
+			}
 		}
-		if ((player2.X) >= walls[i + 1] - 5 && (player2.Y <= (walls[i + 1]) + (walls[i + 3]) + 5) && player2.X + 50 >= walls[i] && player2.X <= walls[i] + walls[i + 2]) {
+		if (player2.X + 50 > walls[i] && player2.X < walls[i]+walls[i+2] && player2.Y +50 > walls[i+1] && player2.Y < walls[i+1] + walls[i+3]) {
 			player2.Vx = 0;
+			if (player2.X < walls[i]) {
+				player2.X -= 2;
+			}
+			if (player2.X + 50> walls[i] + walls[i + 2]) {
+				player2.X += 2;
+			}
 		}
 	}
-}*/
+}
