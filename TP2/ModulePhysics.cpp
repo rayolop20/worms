@@ -74,7 +74,6 @@ update_status ModulePhysics::PreUpdate()
 }
 
 update_status ModulePhysics::Update() {
-<<<<<<< HEAD
 
 	if (Player.dead == false && Player2.dead == false)
 	{
@@ -89,39 +88,39 @@ update_status ModulePhysics::Update() {
 			ball.fimpx = 0.0;
 			ball.fimpy = 0.0;
 		}
-=======
->>>>>>> parent of e0498d3 (players dead and colisions ball)
 
-	ball.fx = ball.fy = 0.0;
-	ball.accx = ball.accy = 0.0;
-	ball.fdragx = 0.0;
-	ball.fdragy = 0.0;
-	if (ball.physenable == true) {
-		ball.fimpx = 0.0;
-		ball.fimpy = 0.0;
-	}
+		if (ball.physenable == false) {
+			if (App->player->players == false)
+			{
+				ball.X = Player.X + 50;
+				ball.Y = Player.Y;
+			}
+			if (App->player->players == true)
+			{
+				ball.X = Player2.X;
+				ball.Y = Player2.Y;
+			}
 
-	if (ball.physenable == false) {
-		if (App->player->players == false)
-		{
-			ball.X = Player.X + 50;
-			ball.Y = Player.Y;
 		}
-		if (App->player->players == true)
+		//1#compute forces
 		{
-			ball.X = Player2.X;
-			ball.Y = Player2.Y;
+
+			//init grav
+			float fgx = ball.mass * 0.0;
+			float fgy = ball.mass * 10.0; // Let's assume gravity is constant and downwards
+
+			ball.fx += fgx;
+			ball.fy += fgy;
 		}
-		
-	}
-	//1#compute forces
-	{
 
-		//init grav
-		float fgx = ball.mass * 0.0;
-		float fgy = ball.mass * 10.0; // Let's assume gravity is constant and downwards
+		//2# Llei newton F=m*a
+		{
+			ball.accx = ball.fx / ball.mass;
+			ball.accy = ball.fy / ball.mass;
+		}
 
-<<<<<<< HEAD
+		//3#integrate
+
 	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && ball.lock == false) {
 
 		ball.fimpx += 50;
@@ -143,142 +142,91 @@ update_status ModulePhysics::Update() {
 					Player.Angle--;
 				}
 			}
-=======
-		ball.fx += fgx;
-		ball.fy += fgy;
-	}
 
-	//2# Llei newton F=m*a
-	{
-		ball.accx = ball.fx / ball.mass;
-		ball.accy = ball.fy / ball.mass;
-	}
-
-	//3#integrate
->>>>>>> parent of e0498d3 (players dead and colisions ball)
-
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-
-		ball.fimpx += 50;
-		//ball.fimpx = 1000;
-	}
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-
-		ball.fimpx -= 50;
-		//ball.fimpx = 1000;
-	}
-	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-		ball.fimpy -= 50;
-		if (App->player->players == false)
-		{
-			if (Player.Angle > -60)
+			if (App->player->players == true)
 			{
-				Player.Angle--;
+				if (Player2.Angle < 60)
+				{
+					Player2.Angle++;
+				}
+
 			}
+			//ball.fimpy = -1000;
 		}
 		//ball.fimpy = -1000;
 	}
 
-<<<<<<< HEAD
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT && ball.lock == false) {
 		ball.fimpy += 50;
 		if (App->player->players == false)
 		{
 			if (Player.Angle < 20)
-=======
-		if (App->player->players == true)
-		{
-			if (Player2.Angle < 60)
->>>>>>> parent of e0498d3 (players dead and colisions ball)
 			{
-				Player2.Angle++;
+				if (Player.Angle < 20)
+				{
+					Player.Angle++;
+				}
 			}
 
-		}
-		//ball.fimpy = -1000;
-	}
-	
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-		ball.fimpy += 50;
-		if (App->player->players == false)
-		{
-			if (Player.Angle < 20)
+			if (App->player->players == true)
 			{
-				Player.Angle++;
+				if (Player2.Angle > -20)
+				{
+					Player2.Angle--;
+				}
 			}
+
+			//ball.fimpy = -1000;
+		}
+		if ((App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN || ball.parachute == true) && (ball.Y > ball.prev_positionY)) {
+
+			ball.parachute = true;
+			SDL_Rect parachueRect = { ball.X - 2.5 * ball.radi,ball.Y - 4.5 * ball.radi,ball.radi * 5,ball.radi };
+			App->renderer->DrawQuad(parachueRect, 0, 255, 0);
+
+			ball.fdragy = ball.surfaceRect / 5 - ball.mass * 0.3;
+
+			if (ball.X < ball.prev_positionX) {
+				ball.fdragx = ball.surfaceRect / 50 + ball.mass * 0.1;
+			}
+			if (ball.X > ball.prev_positionX) {
+				ball.fdragx = -ball.surfaceRect / 50 - ball.mass * 0.1;
+			}
+			/*if(ball.Vy <= ball.prev_velocityX) {
+				App->renderer->DrawCircle(400, 200, 100, 255, 255, 255);
+			}*/
+
+
 		}
 
-		if (App->player->players == true)
-		{
-			if (Player2.Angle > -20)
-			{
-				Player2.Angle--;
-			}
-		}
+		//Add impulse force
+		ball.accx += ball.fimpx;
+		ball.accy += ball.fimpy;
+		//add drag force
+		ball.accx += ball.fdragx;
+		ball.accy += ball.fdragy;
 
-		//ball.fimpy = -1000;
-	}
-	if ((App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN || ball.parachute == true) && (ball.Y > ball.prev_positionY)) {
-
-<<<<<<< HEAD
 		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 		{
 			ball.physenable = true;
 			ball.lock = true;
-=======
-		ball.parachute = true;
-		SDL_Rect parachueRect = { ball.X - 2.5 * ball.radi,ball.Y - 4.5 * ball.radi,ball.radi * 5,ball.radi };
-		App->renderer->DrawQuad(parachueRect, 0, 255, 0);
-		
-		ball.fdragy = ball.surfaceRect / 5 - ball.mass * 0.3;
-		
-		if (ball.X < ball.prev_positionX) {
-			ball.fdragx = ball.surfaceRect / 50 + ball.mass * 0.1;
+	}
+
+		DrawColisions();
+		OnColision(ball, walls);
+		OnColisionPlayers(Player, ball, Player2, walls, collisionsPlayer);
+		OnColisionPPup(ball, PowerUPP);
+
+		if (ball.physenable == true)
+		{
+			ball.prev_positionX = ball.X;
+			ball.prev_positionY = ball.Y;
+			ball.prev_velocityX = ball.Vx;
+			ball.prev_velocityY = ball.Vy;
+			integratorVerletBall(ball, Delta);
+
 		}
-		if(ball.X > ball.prev_positionX) {
-			ball.fdragx = -ball.surfaceRect / 50 - ball.mass * 0.1;
-		}
-		/*if(ball.Vy <= ball.prev_velocityX) {
-			App->renderer->DrawCircle(400, 200, 100, 255, 255, 255);
-		}*/
-		
-			
->>>>>>> parent of e0498d3 (players dead and colisions ball)
-	}
 
-	//Add impulse force
-	ball.accx += ball.fimpx;
-	ball.accy += ball.fimpy;
-	//add drag force
-	ball.accx += ball.fdragx;
-	ball.accy += ball.fdragy;
-	
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN )
-	{
-			ball.physenable = true;
-	}
-
-	DrawColisions();
-	OnColision(ball, walls);
-	OnColisionPlayers(Player,Player2 , walls);
-	OnColisionPPup(ball, PowerUPP);
-
-	if (ball.physenable == true)
-	{
-		ball.prev_positionX = ball.X;
-		ball.prev_positionY = ball.Y;
-		ball.prev_velocityX = ball.Vx;
-		ball.prev_velocityY = ball.Vy;
-		integratorVerletBall(ball, Delta);
-		
-	}
-	
-	//player update
-	{
-		Player.fx = 0.0;
-		Player.accx = 0.0;
-
-<<<<<<< HEAD
 	//reset ball
 	if (ball.X > 1000 || ball.X < 0)
 	{
@@ -287,18 +235,8 @@ update_status ModulePhysics::Update() {
 		ball.physenable = false;
 		if (App->player->players == true) {//Canviar de jugador
 			App->player->players = false;
-=======
-		Player2.fx = 0.0;
-		Player2.accx = 0.0;
-		//2# Llei newton F=m*a
-		{
-			Player.accx = Player.fx / Player.mass;
-			Player2.accx = Player2.fx / Player2.mass;
->>>>>>> parent of e0498d3 (players dead and colisions ball)
 		}
-	}
 
-<<<<<<< HEAD
 		//reset ball
 		if (shot == true)
 		{
@@ -315,23 +253,10 @@ update_status ModulePhysics::Update() {
 				}
 			}
 
-=======
-	//reset ball
-	if (ball.X > 1000 || ball.X < 0)
-	{
-		ball.physenable = false;
-		if (App->player->players == true) {//Canviar de jugador
-			App->player->players = false;
 		}
-		else if (App->player->players == false) {//Canviar de jugador
-			App->player->players = true;
->>>>>>> parent of e0498d3 (players dead and colisions ball)
-		}
-	}
-<<<<<<< HEAD
 
-=======
->>>>>>> parent of e0498d3 (players dead and colisions ball)
+	}
+
 	return UPDATE_CONTINUE;
 }
 PhysBody* ModulePhysics::CreateCircle(float x, float y, float radius)
@@ -348,8 +273,6 @@ PhysBody* ModulePhysics::CreateRectangle(int x, int y, float rotation)
 	return nullptr;
 }
 
-
-//
 update_status ModulePhysics::PostUpdate()
 {
 	// TODO 5: On space bar press, create a circle on mouse position
@@ -386,8 +309,6 @@ update_status ModulePhysics::PostUpdate()
 	return UPDATE_CONTINUE;
 }
 
-
-// Called before quitting
 bool ModulePhysics::CleanUp()
 {
 	LOG("Destroying physics world");
@@ -416,7 +337,6 @@ void ModulePhysics::integratorVerletPlayer2(Player_Cannon2& player2, float dt)
 	player2.X += player2.Vx * dt + 0.5 * player2.accx * dt * dt;
 	player2.Vx += player2.accx * dt;
 }
-
 
 void ModulePhysics::DrawColisions()
 {
@@ -470,7 +390,10 @@ void ModulePhysics::OnColision(Ball& ball, float walls[])
 	}
 }
 
-}void ModulePhysics::OnColisionPPup(Ball& ball, float PPup[])
+
+}
+
+void ModulePhysics::OnColisionPPup(Ball& ball, float PPup[])
 {//0,600,1100,400
 	for (int i = 0; i < 4; i += 4) {
 		if (ball.X > PPup[i] && ball.X  < PPup[i] + PPup[i + 2] && ball.Y > PPup[i + 1] - 10 && ball.Y < PPup[i + 1] + PPup[i + 3] - 10
@@ -485,7 +408,7 @@ void ModulePhysics::OnColision(Ball& ball, float walls[])
 	}
 }
 
-void ModulePhysics::OnColisionPlayers(Player_Cannon& player, Player_Cannon2& player2, float walls[]) {
+void ModulePhysics::OnColisionPlayers(Player_Cannon& player, Ball& ball, Player_Cannon2& player2, float walls[], float collisionsPlayer[]) {
 	for (int i = 0; i < 16; i += 4) {
 		/*0, 700, 1030, 100,
 			0, 0, 1030, 100,
@@ -510,7 +433,6 @@ void ModulePhysics::OnColisionPlayers(Player_Cannon& player, Player_Cannon2& pla
 			}
 		}
 	}
-<<<<<<< HEAD
 
 	if (shot == true)
 	{
@@ -536,6 +458,3 @@ void ModulePhysics::OnColisionPlayers(Player_Cannon& player, Player_Cannon2& pla
 	}
 
 }
-=======
-}
->>>>>>> parent of e0498d3 (players dead and colisions ball)
