@@ -45,13 +45,13 @@ bool ModulePhysics::Start()
 		ball.cl = 0.1;
 		ball.cs1 = 0.85;
 		ball.cs2 = 0.7;
-		
+
 
 		//position
-		
+
 		ball.Vx = 0;
 		ball.Vy = 0;
-		
+
 		ball.surfaceRect = ball.radi * 5;
 	}
 	return true;
@@ -74,7 +74,7 @@ update_status ModulePhysics::PreUpdate()
 }
 
 update_status ModulePhysics::Update() {
-	
+
 	if (Player.dead == false && Player2.dead == false)
 	{
 		float collisionsPlayer[8] = { Player.X, Player.Y ,50,50,
@@ -121,19 +121,21 @@ update_status ModulePhysics::Update() {
 
 		//3#integrate
 
-		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && ball.lock == false) {
 
-			ball.fimpx += 50;
-			//ball.fimpx = 1000;
-		}
-		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+		ball.fimpx += 50;
+		//ball.fimpx = 1000;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && ball.lock == false) {
 
-			ball.fimpx -= 50;
-			//ball.fimpx = 1000;
-		}
-		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-			ball.fimpy -= 50;
-			if (App->player->players == false)
+		ball.fimpx -= 50;
+		//ball.fimpx = 1000;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT && ball.lock == false) {
+		ball.fimpy -= 50;
+		if (App->player->players == false)
+		{
+			if (Player.Angle > -60)
 			{
 				if (Player.Angle > -60)
 				{
@@ -151,10 +153,14 @@ update_status ModulePhysics::Update() {
 			}
 			//ball.fimpy = -1000;
 		}
+		//ball.fimpy = -1000;
+	}
 
-		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-			ball.fimpy += 50;
-			if (App->player->players == false)
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT && ball.lock == false) {
+		ball.fimpy += 50;
+		if (App->player->players == false)
+		{
+			if (Player.Angle < 20)
 			{
 				if (Player.Angle < 20)
 				{
@@ -203,8 +209,8 @@ update_status ModulePhysics::Update() {
 		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 		{
 			ball.physenable = true;
-			shot = true;
-		}
+			ball.lock = true;
+	}
 
 		DrawColisions();
 		OnColision(ball, walls);
@@ -221,18 +227,14 @@ update_status ModulePhysics::Update() {
 
 		}
 
-		//player update
-		{
-			Player.fx = 0.0;
-			Player.accx = 0.0;
-
-			Player2.fx = 0.0;
-			Player2.accx = 0.0;
-			//2# Llei newton F=m*a
-			{
-				Player.accx = Player.fx / Player.mass;
-				Player2.accx = Player2.fx / Player2.mass;
-			}
+	//reset ball
+	if (ball.X > 1000 || ball.X < 0)
+	{
+		//Block Ball when you throw it
+		//ball.lock = false;
+		ball.physenable = false;
+		if (App->player->players == true) {//Canviar de jugador
+			App->player->players = false;
 		}
 
 		//reset ball
@@ -250,11 +252,11 @@ update_status ModulePhysics::Update() {
 					shot = false;
 				}
 			}
-		
+
 		}
 
 	}
-	
+
 	return UPDATE_CONTINUE;
 }
 PhysBody* ModulePhysics::CreateCircle(float x, float y, float radius)
@@ -357,7 +359,7 @@ void ModulePhysics::OnColision(Ball& ball, float walls[])
 	for (int i = 0; i < 16; i += 4) {
 		if (ball.X > walls[i] && ball.X  < walls[i] + walls[i+2] && ball.Y > walls[i + 1] - 10 && ball.Y < walls[i + 1] + walls[i + 3] - 10
 			|| ball.X > walls[i] && ball.X < walls[i] + walls[i + 2] && ball.Y > walls[i + 1] && ball.Y < walls[i + 1] + walls[i + 3]) {
-			
+
 			if ((ball.X > walls[i] + 10 && ball.X < walls[i] + walls[i + 2] - 10 && ball.Y - ball.radi > walls[i + 1] - 10 && ball.Y + ball.radi < walls[i + 1] + walls[i + 3] +  10)
 				|| (ball.X > walls[i] + 10 && ball.X < walls[i] + walls[i + 2] - 10 && ball.Y > walls[i + 1] - 10 && ball.Y < walls[i + 1] + walls[i + 3] + 10)) {
 				if (ball.Y > walls[i+1] + walls[i+3] -10) {
@@ -366,12 +368,12 @@ void ModulePhysics::OnColision(Ball& ball, float walls[])
 				else {
 					ball.Y -= 2;
 				}
-				
+
 				ball.Vy *= -ball.cs2;
 				ball.Vx *= ball.cs1;
 				App->renderer->DrawCircle(100, 100, 50, 250, 250, 250);
 			}
-			
+
 		if (ball.X > walls[i] -10 && ball.X < walls[i] + walls[i+2] +10 && ball.Y > walls[i+1] && ball.Y < walls[i+1] + walls[i+3] - 10) {
 			if (ball.X > walls[i] + walls[i+2]-10) {
 				ball.X += 2;
@@ -379,12 +381,12 @@ void ModulePhysics::OnColision(Ball& ball, float walls[])
 			else {
 				ball.X -= 2;
 			}
-			
+
 			ball.Vx *= -ball.cs2;
 			ball.Vy *= ball.cs1;
 			App->renderer->DrawCircle(200, 100, 100, 250, 250, 250);
 		}
-			
+
 	}
 }
 
