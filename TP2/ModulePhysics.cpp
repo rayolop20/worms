@@ -116,17 +116,17 @@ update_status ModulePhysics::Update() {
 
 	//3#integrate
 
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && ball.lock == false) {
 
 		ball.fimpx += 50;
 		//ball.fimpx = 1000;
 	}
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && ball.lock == false) {
 
 		ball.fimpx -= 50;
 		//ball.fimpx = 1000;
 	}
-	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT && ball.lock == false) {
 		ball.fimpy -= 50;
 		if (App->player->players == false)
 		{
@@ -147,7 +147,7 @@ update_status ModulePhysics::Update() {
 		//ball.fimpy = -1000;
 	}
 	
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT && ball.lock == false) {
 		ball.fimpy += 50;
 		if (App->player->players == false)
 		{
@@ -198,6 +198,7 @@ update_status ModulePhysics::Update() {
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN )
 	{
 			ball.physenable = true;
+			ball.lock = true;
 	}
 
 	DrawColisions();
@@ -232,6 +233,8 @@ update_status ModulePhysics::Update() {
 	//reset ball
 	if (ball.X > 1000 || ball.X < 0)
 	{
+		//Block Ball when you throw it
+		//ball.lock = false;
 		ball.physenable = false;
 		if (App->player->players == true) {//Canviar de jugador
 			App->player->players = false;
