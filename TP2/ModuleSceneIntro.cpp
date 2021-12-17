@@ -34,11 +34,7 @@ bool ModuleSceneIntro::CleanUp()
 // Update: draw background
 update_status ModuleSceneIntro::Update()
 {
-	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
-	{
-		App->physics->Player.dead = false;
-		App->physics->Player2.dead = false;
-	}
+	
 	
 
 	return UPDATE_CONTINUE;
