@@ -44,6 +44,11 @@ public:
 		float accx;
 		float accy;
 
+
+		//buoyancy
+		float buoyancy;
+		float Vsub;
+
 		//mass
 		float mass;
 		float density;
@@ -56,16 +61,21 @@ public:
 		// String coeficients
 		float cs1;
 		float cs2;
-		
-
+		float cb;
+		//drag forces
 		float fdragx;
 		float fdragy;
+		//Hydrodynamics
+		float buoyancyDragX;
+		float buoyancyDragY;
 
 		//has fisic enable?
 		bool physenable = false;
 		//Parachute enable?
 		bool parachute = false;
 		bool lock = false;
+		//Is on water?
+		bool buoyancy_enable = false;
 		//prev position
 		float prev_positionX;
 		float prev_positionY;
@@ -97,6 +107,7 @@ public:
 
 		//accel
 		float accx;
+
 
 		//mass
 		float mass;
@@ -141,7 +152,11 @@ public:
 						600,500,50,500,
 						300,500,50,500 };
 
+	float water[4] = { 350,500,250,500 };
+
 	float PowerUPP[4] = { 700,200, 40, 40 };
+
+	float waterDensity;
 
 	void integratorVerletBall(Ball& ball, float dt);
 	void integratorVerletPlayer(Player_Cannon& player, float dt);

@@ -24,7 +24,7 @@ bool ModulePhysics::Start()
 		//player 1
 		Player.mass = 20;
 		//position
-		Player.X = 400;
+		Player.X = 150;
 		Player.Y = 650;
 		Player.Vx = 0;
 
@@ -45,6 +45,8 @@ bool ModulePhysics::Start()
 		ball.cl = 0.1;
 		ball.cs1 = 0.85;
 		ball.cs2 = 0.7;
+		ball.cb = 0.001;
+		waterDensity = 1.0;
 		
 
 		//position
@@ -83,6 +85,10 @@ update_status ModulePhysics::Update() {
 		ball.accx = ball.accy = 0.0;
 		ball.fdragx = 0.0;
 		ball.fdragy = 0.0;
+		ball.buoyancy = 0.0;
+		ball.Vsub = 0;
+		ball.buoyancyDragX = 0.0;
+		ball.buoyancyDragY = 0.0;
 		if (ball.physenable == true) {
 			ball.fimpx = 0.0;
 			ball.fimpy = 0.0;
@@ -210,6 +216,26 @@ update_status ModulePhysics::Update() {
 		OnColision(ball, walls);
 		OnColisionPlayers(Player, ball, Player2, walls, collisionsPlayer);
 		OnColisionPPup(ball, PowerUPP);
+
+		if (ball.buoyancy_enable == true) {
+			ball.buoyancy = -(ball.mass * 10.0 * waterDensity * ball.Vsub * ball.cb);
+			ball.buoyancyDragX = 10.0;
+			if (ball.prev_positionY < ball.Y) {
+				ball.buoyancyDragY = -50;
+
+			}
+			if (ball.prev_positionX < ball.X) {
+				ball.buoyancyDragX = -20;
+			}
+			else {
+				ball.buoyancyDragX = 20;
+
+			}
+			//gravetat * volum submergit * densitat fluid * coeficient
+		}
+
+		ball.accy += ball.buoyancy + ball.buoyancyDragY;
+		ball.accx += ball.buoyancyDragX;
 
 		if (ball.physenable == true)
 		{
@@ -355,6 +381,9 @@ void ModulePhysics::DrawColisions()
 	SDL_Rect PPup = { 700,200, 40, 40 };
 	App->renderer->DrawQuad(PPup, 0, 0, 255);
 
+	SDL_Rect water = { 350,500,250,500 };
+	App->renderer->DrawQuad(water, 0, 0, 255);
+
 }
 
 void ModulePhysics::OnColision(Ball& ball, float walls[])
@@ -391,6 +420,21 @@ void ModulePhysics::OnColision(Ball& ball, float walls[])
 		}
 			
 	}
+		for(int i = 0; i < 4; i += 4) {
+			if (ball.X > water[i] && ball.X  < water[i] + water[i + 2] && ball.Y > water[i + 1] && ball.Y < water[i + 1] + water[i + 3]) {
+				App->renderer->DrawCircle(100, 300, 50, 0, 0, 255);
+				ball.buoyancy_enable = true;
+				if (ball.Y - ball.radi < water[i + 1] && ball.Y <= water[i+1]) {
+					ball.Vsub = (ball.Y + ball.radi - water[i + 1]) * 2 * ball.radi;
+				}
+				if (ball.Y - 2*ball.radi >= water[i + 1]) {
+					ball.Vsub = ((ball.Y + ball.radi - water[i + 1]) - (ball.Y - ball.radi - water[i+1])) * 2 * ball.radi;
+				}				
+			}
+			else {
+				ball.buoyancy_enable = false;
+			}
+		}
 }
 
 }void ModulePhysics::OnColisionPPup(Ball& ball, float PPup[])
@@ -399,6 +443,7 @@ void ModulePhysics::OnColision(Ball& ball, float walls[])
 		if (ball.X > PPup[i] && ball.X  < PPup[i] + PPup[i + 2] && ball.Y > PPup[i + 1] - 10 && ball.Y < PPup[i + 1] + PPup[i + 3] - 10
 			|| ball.X > PPup[i] && ball.X < PPup[i] + PPup[i + 2] && ball.Y > PPup[i + 1] && ball.Y < PPup[i + 1] + PPup[i + 3]) {
 				ball.radi = 15;
+				ball.mass = 30;
 				ball.surface = ball.radi * 2/3;
 				//ball.mass = ball.surface * 5;
 				//ball.density = ball.mass * ball.surface;
@@ -408,7 +453,7 @@ void ModulePhysics::OnColision(Ball& ball, float walls[])
 	}
 }
 
-	void ModulePhysics::OnColisionPlayers(Player_Cannon& player, Ball& ball, Player_Cannon2& player2, float walls[], float collisionsPlayer[]) {
+void ModulePhysics::OnColisionPlayers(Player_Cannon& player, Ball& ball, Player_Cannon2& player2, float walls[], float collisionsPlayer[]) {
 		for (int i = 0; i < 16; i += 4) {
 			/*0, 700, 1030, 100,
 				0, 0, 1030, 100,
@@ -432,7 +477,7 @@ void ModulePhysics::OnColision(Ball& ball, float walls[])
 					player2.X += 2;
 				}
 			}
-		}
+		}	
 
 		if (shot == true)
 		{
