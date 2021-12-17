@@ -76,7 +76,7 @@ update_status ModulePhysics::PreUpdate()
 }
 
 update_status ModulePhysics::Update() {
-	if (Player.dead == false && Player2.dead == false)
+	if (Player.dead == false && Player2.dead == false && App->scene_intro->Fscreen == false)
 	{
 		float collisionsPlayer[8] = { Player.X, Player.Y ,50,50,
 								Player2.X,Player2.Y,50,50 };
@@ -264,7 +264,7 @@ update_status ModulePhysics::Update() {
 		//reset ball
 		if (shot == true)
 		{
-			if (ball.X > 1000 || ball.X < 0)
+			if (ball.X > 1000 || ball.X < 0 || ball.Y < 0 || ball.Y > 758)
 			{
 				//Block Ball when you throw it
 				//ball.lock = false;
@@ -309,28 +309,6 @@ update_status ModulePhysics::PostUpdate()
 
 	if(!debug)
 		return UPDATE_CONTINUE;
-
-	// Bonus code: this will iterate all objects in the world and draw the circles
-	// You need to provide your own macro to translate meters to pixels
-	/*
-	for(b2Body* b = world->GetBodyList(); b; b = b->GetNext())
-	{
-		for(b2Fixture* f = b->GetFixtureList(); f; f = f->GetNext())
-		{
-			switch(f->GetType())
-			{
-				case b2Shape::e_circle:
-				{
-					b2CircleShape* shape = (b2CircleShape*)f->GetShape();
-					b2Vec2 pos = f->GetBody()->GetPosition();
-					App->renderer->DrawCircle(METERS_TO_PIXELS(pos.x), METERS_TO_PIXELS(pos.y), METERS_TO_PIXELS(shape->m_radius), 255, 255, 255);
-				}
-				break;
-
-				// You will have to add more cases to draw boxes, edges, and polygons ...
-			}
-		}
-	}*/
 
 	return UPDATE_CONTINUE;
 }
@@ -377,11 +355,13 @@ void ModulePhysics::DrawColisions()
 	App->renderer->DrawQuad(rect3, 255, 0, 0);
 	SDL_Rect rect4 = { 300,500,50,500 };
 	App->renderer->DrawQuad(rect4, 255, 0, 0);
-
+	SDL_Rect rect5 = { -10,0,10,1000 };
+	App->renderer->DrawQuad(rect5, 25, 25, 0);
+	SDL_Rect rect6 = { 1024,0,10,1000 };
 	SDL_Rect PPup = { 700,200, 40, 40 };
 	App->renderer->DrawQuad(PPup, 0, 0, 255);
 
-	SDL_Rect water = { 350,500,250,500 };
+	SDL_Rect water = { 350,510,250,500 };
 	App->renderer->DrawQuad(water, 0, 0, 255);
 
 }
@@ -454,7 +434,7 @@ void ModulePhysics::OnColision(Ball& ball, float walls[])
 }
 
 void ModulePhysics::OnColisionPlayers(Player_Cannon& player, Ball& ball, Player_Cannon2& player2, float walls[], float collisionsPlayer[]) {
-		for (int i = 0; i < 16; i += 4) {
+		for (int i = 0; i < 24; i += 4) {
 			/*0, 700, 1030, 100,
 				0, 0, 1030, 100,
 				600, 500, 50, 500,
