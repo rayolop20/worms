@@ -53,8 +53,14 @@ public:
 	bool CleanUp();
 
 public:
+	bool Fscreen = true;
 
 	SDL_Texture* graphics;
+	SDL_Texture* start;
+	SDL_Texture* end;
+	SDL_Texture* Terra;
+	SDL_Texture* Fondo;
+
 	PhysBody* background;
 
 	Bouncer bouncer1;
