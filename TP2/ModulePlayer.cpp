@@ -81,14 +81,18 @@ update_status ModulePlayer::Update()
 
 update_status ModulePlayer::PostUpdate()
 {
-	App->physics->CreateCircle(App->physics->ball.X, App->physics->ball.Y, App->physics->ball.radi);
-	App->physics->CreateRectangle(App->physics->Player.X, App->physics->Player.Y, App->physics->Player.Angle);
-	App->physics->CreateRectangle(App->physics->Player2.X, App->physics->Player2.Y, App->physics->Player2.Angle);
-	//textures
-	App->renderer->Blit(Cannon, App->physics->Player.X + 23, App->physics->Player.Y + 23, NULL, 1.0f, App->physics->Player.Angle);
-	App->renderer->Blit(Tank, App->physics->Player.X, App->physics->Player.Y, NULL);
-	App->renderer->Blit(Cannon2, App->physics->Player2.X + 5, App->physics->Player2.Y+23, NULL, 1.0f, App->physics->Player2.Angle);
-	App->renderer->Blit(Tank2, App->physics->Player2.X, App->physics->Player2.Y, NULL);
+	if (App->scene_intro->Fscreen == false && App->physics->Player.dead == false && App->physics->Player2.dead == false)
+	{
+		App->physics->CreateCircle(App->physics->ball.X, App->physics->ball.Y, App->physics->ball.radi);
+		App->physics->CreateRectangle(App->physics->Player.X, App->physics->Player.Y, App->physics->Player.Angle);
+		App->physics->CreateRectangle(App->physics->Player2.X, App->physics->Player2.Y, App->physics->Player2.Angle);
+		//textures
+		App->renderer->Blit(Cannon, App->physics->Player.X + 23, App->physics->Player.Y + 23, NULL, 1.0f, App->physics->Player.Angle);
+		App->renderer->Blit(Tank, App->physics->Player.X, App->physics->Player.Y, NULL);
+		App->renderer->Blit(Cannon2, App->physics->Player2.X + 5, App->physics->Player2.Y + 23, NULL, 1.0f, App->physics->Player2.Angle);
+		App->renderer->Blit(Tank2, App->physics->Player2.X, App->physics->Player2.Y, NULL);
+
+	}
 
 	return UPDATE_CONTINUE;
 }
