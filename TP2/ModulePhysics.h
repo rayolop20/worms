@@ -65,8 +65,6 @@ public:
 		bool physenable = false;
 		//Parachute enable?
 		bool parachute = false;
-		//
-		bool lock = false;
 
 		//prev position
 		float prev_positionX;
