@@ -18,8 +18,8 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 	start = App->textures->Load("Assets/Start.png");
-	end1 = App->textures->Load("Assets/Win.png");
-	end2 = App->textures->Load("Assets/Win.png");
+	end1 = App->textures->Load("Assets/Win1.png");
+	end2 = App->textures->Load("Assets/Win2.png");
 	Fondo = App->textures->Load("Assets/background2.png");
 	Techo = App->textures->Load("Assets/Techo.png");
 	Terra = App->textures->Load("Assets/Terra.png");
@@ -59,11 +59,11 @@ update_status ModuleSceneIntro::Update()
 	}
 	if (App->physics->Player.dead == true)
 	{
-		App->renderer->Blit(end1, 0, 0, NULL);
+		App->renderer->Blit(end2, 0, 0, NULL);
 	}
 	if (App->physics->Player2.dead == true)
 	{
-		App->renderer->Blit(end2, 0, 0, NULL);
+		App->renderer->Blit(end1, 0, 0, NULL);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
