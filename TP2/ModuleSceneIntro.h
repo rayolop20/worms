@@ -58,8 +58,11 @@ public:
 	SDL_Texture* graphics;
 	SDL_Texture* start;
 	SDL_Texture* end;
+	SDL_Texture* Techo;
 	SDL_Texture* Terra;
 	SDL_Texture* Fondo;
+	SDL_Texture* Wall;
+	SDL_Texture* Agua;
 
 	PhysBody* background;
 

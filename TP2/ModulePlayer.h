@@ -34,6 +34,7 @@ public:
 	SDL_Texture* Cannon = nullptr;
 	SDL_Texture* Tank = nullptr;
 	SDL_Texture* Cannon2 = nullptr;
+	SDL_Texture* ball = nullptr;
 	SDL_Texture* Tank2 = nullptr;
 
 };

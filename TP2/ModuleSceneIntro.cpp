@@ -19,8 +19,11 @@ bool ModuleSceneIntro::Start()
 	bool ret = true;
 	start = App->textures->Load("Assets/Start.png");
 	end = App->textures->Load("Assets/Win.png");
-	//Terra = App->textures->Load("Assets/Terra.png");
-	//Fondo = App->textures->Load("Assets/Fondo.png");
+	Fondo = App->textures->Load("Assets/background2.png");
+	Techo = App->textures->Load("Assets/Techo.png");
+	Terra = App->textures->Load("Assets/Terra.png");
+	Wall = App->textures->Load("Assets/Wall.png");
+	Agua = App->textures->Load("Assets/Agua.png");
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
 	return ret;
@@ -37,7 +40,13 @@ bool ModuleSceneIntro::CleanUp()
 // Update: draw background
 update_status ModuleSceneIntro::Update()
 {
-
+	
+	App->renderer->Blit(Fondo, 0, 80, NULL);
+	App->renderer->Blit(Techo, 0, -225, NULL);
+	App->renderer->Blit(Terra, 0, 370, NULL);
+	App->renderer->Blit(Agua, 350, 510, NULL);
+	App->renderer->Blit(Wall, 300, 500, NULL);
+	App->renderer->Blit(Wall, 600, 500, NULL);
 	if (Fscreen == true)
 	{
 		App->renderer->Blit(start, 0, 0, NULL);
