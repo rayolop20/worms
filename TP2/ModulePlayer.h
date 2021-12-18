@@ -30,7 +30,9 @@ public:
 public:
 	int rondacompt = 0;
 	int rondacompt2 = 0;
+	int Explosion_Count = 0;
 	bool players = false;
+	bool Explosion = false;
 	SDL_Texture* Cannon = nullptr;
 	SDL_Texture* Tank = nullptr;
 	SDL_Texture* Cannon2 = nullptr;

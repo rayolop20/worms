@@ -42,7 +42,7 @@ bool ModuleSceneIntro::CleanUp()
 update_status ModuleSceneIntro::Update()
 {
 	
-	App->renderer->Blit(Fondo, 0, 80, NULL);
+	//App->renderer->Blit(Fondo, 0, 80, NULL);
 	App->renderer->Blit(Techo, 0, -225, NULL);
 	App->renderer->Blit(Terra, 0, 370, NULL);
 	App->renderer->Blit(Agua, 350, 510, NULL);

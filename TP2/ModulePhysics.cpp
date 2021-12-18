@@ -211,6 +211,7 @@ update_status ModulePhysics::Update() {
 			shot = true;
 			ball.physenable = true;
 			ball.lock = false;
+	
 		}
 
 		DrawColisions();
@@ -265,18 +266,19 @@ update_status ModulePhysics::Update() {
 		//reset ball
 		if (shot == true)
 		{
-			if (ball.X > 1000 || ball.X < 0 || ball.Y < 0 || ball.Y > 758)
+			if (ball.X > 1000 || ball.X < 0 || ball.Y < 0 || ball.Y > 758 || App->player->Explosion == true)
 			{
 				//Block Ball when you throw it
 				//ball.lock = false;
 				ball.physenable = false;
-				if (App->player->players == true) {//Canviar de jugador
+				if (App->player->players == true ) {//Canviar de jugador
 					App->player->players = false;
 					shot = false;
 					Player.Angle = 0;
 					Player2.Angle = 0;
 					ball.fx = 0;
 					ball.fy = 0;
+					App->player->Explosion_Count = 0;
 				}
 				else if (App->player->players == false) {//Canviar de jugador
 					App->player->players = true;
@@ -285,10 +287,17 @@ update_status ModulePhysics::Update() {
 					Player2.Angle = 0;
 					ball.fx = 0;
 					ball.fy = 0;
+					App->player->Explosion_Count = 0;
 				}
+				App->player->Explosion = false;
 			}
 
 		}
+		if (App->player->Explosion_Count > 20)
+		{
+			App->player->Explosion = true;
+		}
+
 	}
 	return UPDATE_CONTINUE;
 }
@@ -393,6 +402,7 @@ void ModulePhysics::OnColision(Ball& ball, float walls[])
 				ball.Vy *= -ball.cs2;
 				ball.Vx *= ball.cs1;
 				App->renderer->DrawCircle(100, 100, 50, 250, 250, 250);
+				App->player->Explosion_Count++;
 			}
 			
 		if (ball.X > walls[i] -10 && ball.X < walls[i] + walls[i+2] +10 && ball.Y > walls[i+1] && ball.Y < walls[i+1] + walls[i+3] - 10) {
@@ -406,8 +416,9 @@ void ModulePhysics::OnColision(Ball& ball, float walls[])
 			ball.Vx *= -ball.cs2;
 			ball.Vy *= ball.cs1;
 			App->renderer->DrawCircle(200, 100, 100, 250, 250, 250);
+			App->player->Explosion_Count++;
 		}
-			
+	
 	}
 		for(int i = 0; i < 4; i += 4) {
 			if (ball.X > water[i] && ball.X  < water[i] + water[i + 2] && ball.Y > water[i + 1] && ball.Y < water[i + 1] + water[i + 3]) {
@@ -415,14 +426,21 @@ void ModulePhysics::OnColision(Ball& ball, float walls[])
 				ball.buoyancy_enable = true;
 				if (ball.Y - ball.radi < water[i + 1] && ball.Y <= water[i+1]) {
 					ball.Vsub = (ball.Y + ball.radi - water[i + 1]) * 2 * ball.radi;
+					
 				}
 				if (ball.Y - 2*ball.radi >= water[i + 1]) {
 					ball.Vsub = ((ball.Y + ball.radi - water[i + 1]) - (ball.Y - ball.radi - water[i+1])) * 2 * ball.radi;
-				}				
+				}	
+				if (ball.Y > 510 && ball.Y < 512)
+				{
+					App->player->Explosion_Count++;
+				}
 			}
 			else {
 				ball.buoyancy_enable = false;
 			}
+
+		
 		}
 }
 
