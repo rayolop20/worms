@@ -85,8 +85,8 @@ update_status ModulePlayer::PostUpdate()
 	if (App->scene_intro->Fscreen == false && App->physics->Player.dead == false && App->physics->Player2.dead == false)
 	{
 		App->physics->CreateCircle(App->physics->ball.X, App->physics->ball.Y, App->physics->ball.radi);
-		//App->physics->CreateRectangle(App->physics->Player.X, App->physics->Player.Y, App->physics->Player.Angle);
-		//App->physics->CreateRectangle(App->physics->Player2.X, App->physics->Player2.Y, App->physics->Player2.Angle);
+		App->physics->CreateRectangle(App->physics->Player.X, App->physics->Player.Y, App->physics->Player.Angle);
+		App->physics->CreateRectangle(App->physics->Player2.X, App->physics->Player2.Y, App->physics->Player2.Angle);
 		//textures
 		App->renderer->Blit(Cannon, App->physics->Player.X + 23, App->physics->Player.Y + 23, NULL, 1.0f, App->physics->Player.Angle);
 		App->renderer->Blit(Tank, App->physics->Player.X, App->physics->Player.Y, NULL);

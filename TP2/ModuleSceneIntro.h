@@ -57,7 +57,8 @@ public:
 
 	SDL_Texture* graphics;
 	SDL_Texture* start;
-	SDL_Texture* end;
+	SDL_Texture* end1;
+	SDL_Texture* end2;
 	SDL_Texture* Techo;
 	SDL_Texture* Terra;
 	SDL_Texture* Fondo;

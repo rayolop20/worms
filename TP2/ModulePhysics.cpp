@@ -78,8 +78,9 @@ update_status ModulePhysics::PreUpdate()
 update_status ModulePhysics::Update() {
 	if (Player.dead == false && Player2.dead == false && App->scene_intro->Fscreen == false)
 	{
-		float collisionsPlayer[8] = { Player.X, Player.Y ,50,50,
-								Player2.X,Player2.Y,50,50 };
+		float collisionsPlayer[4] = { Player.X, Player.Y ,50,50 };
+		float collisionsPlayer2[4] = { Player2.X, Player2.Y, 50, 50};
+								
 
 		ball.fx = ball.fy = 0.0;
 		ball.accx = ball.accy = 0.0;
@@ -97,13 +98,13 @@ update_status ModulePhysics::Update() {
 		if (ball.physenable == false) {
 			if (App->player->players == false)
 			{
-				ball.X = Player.X + 50;
-				ball.Y = Player.Y;
+				ball.X = Player.X + 60;
+				ball.Y = Player.Y + 10;
 			}
 			if (App->player->players == true)
 			{
-				ball.X = Player2.X;
-				ball.Y = Player2.Y;
+				ball.X = Player2.X - 10;
+				ball.Y = Player2.Y + 10;
 			}
 
 		}
@@ -214,7 +215,7 @@ update_status ModulePhysics::Update() {
 
 		DrawColisions();
 		OnColision(ball, walls);
-		OnColisionPlayers(Player, ball, Player2, walls, collisionsPlayer);
+		OnColisionPlayers(Player, ball, Player2, walls, collisionsPlayer, collisionsPlayer2);
 		OnColisionPPup(ball, PowerUPP);
 
 		if (ball.buoyancy_enable == true) {
@@ -272,10 +273,18 @@ update_status ModulePhysics::Update() {
 				if (App->player->players == true) {//Canviar de jugador
 					App->player->players = false;
 					shot = false;
+					Player.Angle = 0;
+					Player2.Angle = 0;
+					ball.fx = 0;
+					ball.fy = 0;
 				}
 				else if (App->player->players == false) {//Canviar de jugador
 					App->player->players = true;
 					shot = false;
+					Player.Angle = 0;
+					Player2.Angle = 0;
+					ball.fx = 0;
+					ball.fy = 0;
 				}
 			}
 
@@ -433,7 +442,7 @@ void ModulePhysics::OnColision(Ball& ball, float walls[])
 	}
 }
 
-void ModulePhysics::OnColisionPlayers(Player_Cannon& player, Ball& ball, Player_Cannon2& player2, float walls[], float collisionsPlayer[]) {
+void ModulePhysics::OnColisionPlayers(Player_Cannon& player, Ball& ball, Player_Cannon2& player2, float walls[], float collisionsPlayer[], float collisionsPlayer2[]) {
 		for (int i = 0; i < 24; i += 4) {
 			/*0, 700, 1030, 100,
 				0, 0, 1030, 100,
@@ -459,27 +468,47 @@ void ModulePhysics::OnColisionPlayers(Player_Cannon& player, Ball& ball, Player_
 			}
 		}	
 
-		if (shot == true)
+		if (shot == true && App->player->players == true)
 		{
-			for (int i = 0; i < 8; i += 4) {
+			for (int i = 0; i < 4; i += 4) {
 				if (ball.X > collisionsPlayer[i] && ball.X  < collisionsPlayer[i] + collisionsPlayer[i + 2] && ball.Y > collisionsPlayer[i + 1] - 10 && ball.Y < collisionsPlayer[i + 1] + collisionsPlayer[i + 3] - 10
 					|| ball.X > collisionsPlayer[i] && ball.X < collisionsPlayer[i] + collisionsPlayer[i + 2] && ball.Y > collisionsPlayer[i + 1] && ball.Y < collisionsPlayer[i + 1] + collisionsPlayer[i + 3]) {
 					//count++;//Collisions de pilota amb player
 					//Boom();
 					ball.physenable = false;
 					//Explosion_ = true;
-					if (App->player->players == true) {//Canviar de jugador i destruir l'altre
-						player.dead = true;
-						shot = false;
-					}
-					else if (App->player->players == false) {//Canviar de jugador i destruir l'altre
-						player2.dead = true;
-						shot = false;
-					}
+					//Canviar de jugador i destruir l'altre
+					player.dead = true;
+					shot = false;
 					player.Angle = 0;
+					player2.Angle = 0;
+					ball.fx = 0;
+					ball.fy = 0;
 
 				}
 			}
 		}
 
-	}
+		if (shot == true && App->player->players == false)
+		{
+			for (int i = 0; i < 4; i += 4) {
+				if (ball.X > collisionsPlayer2[i] && ball.X  < collisionsPlayer2[i] + collisionsPlayer2[i + 2] && ball.Y > collisionsPlayer2[i + 1] - 10 && ball.Y < collisionsPlayer2[i + 1] + collisionsPlayer2[i + 3] - 10
+					|| ball.X > collisionsPlayer2[i] && ball.X < collisionsPlayer2[i] + collisionsPlayer2[i + 2] && ball.Y > collisionsPlayer2[i + 1] && ball.Y < collisionsPlayer2[i + 1] + collisionsPlayer2[i + 3]) {
+					//count++;//Collisions de pilota amb player
+					//Boom();
+					ball.physenable = false;
+					//Explosion_ = true;
+				
+				  //Canviar de jugador i destruir l'altre
+					player2.dead = true;
+					shot = false;
+					player.Angle = 0;
+					player2.Angle = 0;
+					ball.fx = 0;
+					ball.fy = 0;
+
+				}
+			}
+		}
+
+}
