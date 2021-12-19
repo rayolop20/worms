@@ -222,7 +222,11 @@ update_status ModulePhysics::Update() {
 
 		OnColision(ball, walls);
 		OnColisionPlayers(Player, ball, Player2, walls, collisionsPlayer, collisionsPlayer2);
-		OnColisionPPup(ball, PowerUPP);
+		if (ball.PowerUpAct == false)
+		{
+			OnColisionPPup(ball, PowerUPP);
+		}
+	
 
 		if (ball.buoyancy_enable == true) {
 			ball.buoyancy = -(ball.mass * 10.0 * waterDensity * ball.Vsub * ball.cb);

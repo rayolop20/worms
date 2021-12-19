@@ -49,7 +49,11 @@ update_status ModuleSceneIntro::Update()
 		App->renderer->Blit(Agua, 350, 510, NULL);
 		App->renderer->Blit(Wall, 300, 500, NULL);
 		App->renderer->Blit(Wall, 600, 500, NULL);
-		App->renderer->Blit(PowerUp, 700, 200, NULL);
+		if (App->physics->ball.PowerUpAct == false)
+		{
+			App->renderer->Blit(PowerUp, 700, 200, NULL);
+		}
+	
 	}
 	
 	if (Fscreen == true)
