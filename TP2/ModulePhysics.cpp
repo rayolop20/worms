@@ -128,7 +128,7 @@ update_status ModulePhysics::Update() {
 
 		//3#integrate
 
-		if (App->player->move == true || App->player->moveControl == false)
+		if (App->player->move == true || App->player->moveControl == true)
 		{
 			if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && ball.lock == false && countX <= 2000) {
 

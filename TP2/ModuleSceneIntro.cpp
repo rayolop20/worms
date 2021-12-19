@@ -165,11 +165,11 @@ update_status ModuleSceneIntro::Update()
 		}
 	}
 	if (App->input->GetKey(SDL_SCANCODE_F9) == KEY_DOWN) {//enable/disable drag forces
-		if (App->player->moveControl == false) {
-			App->player->moveControl = true;
+		if (App->player->moveControl == true) {
+			App->player->moveControl = false;
 		}
 		else {
-			App->player->moveControl = false;
+			App->player->moveControl = true;
 		}
 	}
 
