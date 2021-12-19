@@ -137,7 +137,7 @@ update_status ModuleSceneIntro::Update()
 			App->physics->ball.buoyancy_ = false;
 		}
 	}
-	if (App->input->GetKey(SDL_SCANCODE_F8) == KEY_DOWN) {//enable/disable buoyancy forces
+	if (App->input->GetKey(SDL_SCANCODE_F8) == KEY_DOWN) {//enable/disable drag forces
 		if (App->physics->ball.fdrag == false) {
 			App->physics->ball.fdrag = true;
 		}
