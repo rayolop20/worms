@@ -64,6 +64,7 @@ public:
 	SDL_Texture* Fondo;
 	SDL_Texture* Wall;
 	SDL_Texture* Agua;
+	SDL_Texture* PowerUp;
 
 	PhysBody* background;
 

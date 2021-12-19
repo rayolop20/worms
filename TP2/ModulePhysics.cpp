@@ -90,12 +90,12 @@ update_status ModulePhysics::Update() {
 		ball.Vsub = 0;
 		ball.buoyancyDragX = 0.0;
 		ball.buoyancyDragY = 0.0;
-		if (ball.physenable == true) {
+		if (ball.physenable == true && ball.physenableF2 == true) {
 			ball.fimpx = 0.0;
 			ball.fimpy = 0.0;
 		}
 
-		if (ball.physenable == false) {
+		if (ball.physenable == false && ball.physenableF2 == true) {
 			if (App->player->players == false)
 			{
 				ball.X = Player.X + 60;
@@ -182,7 +182,10 @@ update_status ModulePhysics::Update() {
 
 			ball.parachute = true;
 			SDL_Rect parachueRect = { ball.X - 2.5 * ball.radi,ball.Y - 4.5 * ball.radi,ball.radi * 5,ball.radi };
-			App->renderer->DrawQuad(parachueRect, 0, 255, 0);
+			if (ball.rectenable == true) {
+				App->renderer->DrawQuad(parachueRect, 0, 255, 0);
+			}
+			
 
 			ball.fdragy = ball.surfaceRect / 5 - ball.mass * 0.3;
 
@@ -213,8 +216,10 @@ update_status ModulePhysics::Update() {
 			ball.lock = false;
 	
 		}
+		if (ball.rectenable == true) {
+			DrawColisions();
+		}
 
-		DrawColisions();
 		OnColision(ball, walls);
 		OnColisionPlayers(Player, ball, Player2, walls, collisionsPlayer, collisionsPlayer2);
 		OnColisionPPup(ball, PowerUPP);
@@ -239,7 +244,7 @@ update_status ModulePhysics::Update() {
 		ball.accy += ball.buoyancy + ball.buoyancyDragY;
 		ball.accx += ball.buoyancyDragX;
 
-		if (ball.physenable == true)
+		if (ball.physenable == true && ball.physenableF2 == true)
 		{
 			ball.prev_positionX = ball.X;
 			ball.prev_positionY = ball.Y;
@@ -301,8 +306,6 @@ update_status ModulePhysics::Update() {
 			ball.radi = 15;
 			ball.mass = 30;
 			ball.surface = ball.radi * 2 / 3;
-			//ball.mass = ball.surface * 5;
-			//ball.density = ball.mass * ball.surface;
 			ball.surfaceRect = ball.radi * 5 / 3;
 			App->renderer->DrawCircle(200, 100, 100, 250, 250, 250);
 		}
@@ -384,6 +387,7 @@ void ModulePhysics::integratorVerletPlayer2(Player_Cannon2& player2, float dt)
 
 void ModulePhysics::DrawColisions()
 {
+	
 	SDL_Rect rect1 = { 0,700,1030,100 };
 	App->renderer->DrawQuad(rect1, 255, 0, 0);
 	SDL_Rect rect2 = { 0,-5,1030,100 };
@@ -398,8 +402,9 @@ void ModulePhysics::DrawColisions()
 	SDL_Rect PPup = { 700,200, 40, 40 };
 	App->renderer->DrawQuad(PPup, 0, 0, 255);
 
-	SDL_Rect water = { 350,510,250,500 };
-	App->renderer->DrawQuad(water, 0, 0, 255);
+		SDL_Rect water = { 350,510,250,500 };
+		App->renderer->DrawQuad(water, 0, 0, 255);
+	
 
 }
 

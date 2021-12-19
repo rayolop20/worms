@@ -71,6 +71,10 @@ public:
 
 		//has fisic enable?
 		bool physenable = false;
+		bool physenableF2 = true;
+		//Has visible colisions?
+		bool rectenable = false;
+
 		//Parachute enable?
 		bool parachute = false;
 		bool lock = false;
@@ -85,6 +89,8 @@ public:
 		int PowerUp1 = 0;
 		//Powerup Active P2
 		int PowerUp2 = 0;
+		//Powerup enable/disable F4
+		bool F4;
 		//Powerup Active when touched
 		bool PowerUpAct = false;
 

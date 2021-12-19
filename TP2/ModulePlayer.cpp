@@ -21,6 +21,7 @@ bool ModulePlayer::Start()
 	Tank2 = App->textures->Load("Assets/tanque2.png");
 	Cannon2 = App->textures->Load("Assets/cano_tanque2.png");
 	ball = App->textures->Load("Assets/granada.png");
+	ball2 = App->textures->Load("Assets/granada3.png");
 
 	return true;
 }
@@ -84,15 +85,26 @@ update_status ModulePlayer::PostUpdate()
 {
 	if (App->scene_intro->Fscreen == false && App->physics->Player.dead == false && App->physics->Player2.dead == false)
 	{
-		App->physics->CreateCircle(App->physics->ball.X, App->physics->ball.Y, App->physics->ball.radi);
-		App->physics->CreateRectangle(App->physics->Player.X, App->physics->Player.Y, App->physics->Player.Angle);
-		App->physics->CreateRectangle(App->physics->Player2.X, App->physics->Player2.Y, App->physics->Player2.Angle);
+		if (App->physics->ball.rectenable == true) {
+			App->physics->CreateCircle(App->physics->ball.X, App->physics->ball.Y, App->physics->ball.radi);
+			App->physics->CreateRectangle(App->physics->Player.X, App->physics->Player.Y, App->physics->Player.Angle);
+			App->physics->CreateRectangle(App->physics->Player2.X, App->physics->Player2.Y, App->physics->Player2.Angle);
+		}
+		
 		//textures
+	
 		App->renderer->Blit(Cannon, App->physics->Player.X + 23, App->physics->Player.Y + 23, NULL, 1.0f, App->physics->Player.Angle);
 		App->renderer->Blit(Tank, App->physics->Player.X, App->physics->Player.Y, NULL);
 		App->renderer->Blit(Cannon2, App->physics->Player2.X + 5, App->physics->Player2.Y + 23, NULL, 1.0f, App->physics->Player2.Angle);
 		App->renderer->Blit(Tank2, App->physics->Player2.X, App->physics->Player2.Y, NULL);
-		App->renderer->Blit(ball, App->physics->ball.X - 10, App->physics->ball.Y - 10, NULL);
+		if (App->physics->ball.radi == 5) {
+			App->renderer->Blit(ball, App->physics->ball.X - 10, App->physics->ball.Y - 10, NULL);
+		}
+		else {
+			App->renderer->Blit(ball2, App->physics->ball.X - 15, App->physics->ball.Y - 15, NULL);
+		}
+		
+	
 
 	}
 
