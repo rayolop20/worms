@@ -33,5 +33,5 @@ we maked a set of cannons that will fire, if one hits the o other
 wins, there is a power up where the balls gets bigger for one turn.
 
 The engine is made up of:
--Forces that control the granada, such speed, acceleration, drag, gravity and boyancy.
+-Forces that control the grenade, such speed, acceleration, drag, gravity and boyancy.
 -The engine is also made up of various formulas such as Newton's 2nd law, integrators and a collision system.
