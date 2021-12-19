@@ -7,7 +7,7 @@ Source Code: https://github.com/MaralGS/Pintball-Fisica
 
 * Alex Garcia Selma ([Github])(https://github.com/MaralGS))
 * Pol Maresch Marxuach ([Github])(https://github.com/rayolop20))
-+ Pau Olmos Serrano ([Github])(https://github.com/PauOlmos))
+* Pau Olmos Serrano ([Github])(https://github.com/PauOlmos))
 ## Controls:
  * A Key: ForceX Left move
  * D key: ForceX Right move
