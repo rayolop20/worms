@@ -1,7 +1,7 @@
 # WORMS
 This Worms game is a original game developed by Pol Maresch, Alex Garcia and Pau Olmos
 
-Source Code: https://github.com/MaralGS/Pintball-Fisica
+Source Code: https://github.com/rayolop20/worms/releases/tag/V1.0
 
 ## Developers:
 
