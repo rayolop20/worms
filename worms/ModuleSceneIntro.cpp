@@ -97,6 +97,7 @@ update_status ModuleSceneIntro::Update()
 	{
 		App->physics->Player.dead = false;
 		App->physics->Player2.dead = false;
+		App->physics->ball.parachute = false;
 	}
 	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {//Disenable all the forces (pause)
 		if (App->physics->ball.physenableF2 == false) {
