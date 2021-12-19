@@ -106,7 +106,6 @@ update_status ModulePhysics::Update() {
 				ball.X = Player2.X - 10;
 				ball.Y = Player2.Y + 10;
 			}
-
 		}
 		//1#compute forces
 		{
@@ -129,18 +128,21 @@ update_status ModulePhysics::Update() {
 
 		//3#integrate
 
-		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && ball.lock == false) {
+		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && ball.lock == false && countX <= 2000) {
 
 			ball.fimpx += 50;
+			countX += 50;
 			//ball.fimpx = 1000;
 		}
-		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && ball.lock == false) {
+		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && ball.lock == false && countX >= -2000) {
 
 			ball.fimpx -= 50;
+			countX -= 50;
 			//ball.fimpx = 1000;
 		}
-		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT && ball.lock == false) {
+		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT && ball.lock == false && countY <= 3500) {
 			ball.fimpy -= 50;
+			countY += 50;
 			if (App->player->players == false)
 			{
 				if (Player.Angle > -60)
@@ -160,8 +162,9 @@ update_status ModulePhysics::Update() {
 			//ball.fimpy = -1000;
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT && ball.lock == false) {
+		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT && ball.lock == false && countY >= -3500) {
 			ball.fimpy += 50;
+			countY -= 50;
 			if (App->player->players == false)
 			{
 				if (Player.Angle < 20)
@@ -220,6 +223,8 @@ update_status ModulePhysics::Update() {
 			shot = true;
 			ball.physenable = true;
 			ball.lock = false;
+			countY = 0;
+			countX = 0;
 	
 		}
 		if (ball.rectenable == true) {
@@ -378,10 +383,10 @@ bool ModulePhysics::CleanUp()
 
 void ModulePhysics::integratorVerletBall(Ball& ball, float dt)
 {
-		ball.X += ball.Vx * dt + 0.5 * ball.accx * dt * dt;
-		ball.Y += ball.Vy * dt + 0.5 * ball.accy * dt * dt;
-		ball.Vx += ball.accx * dt;
-		ball.Vy += ball.accy * dt;
+	ball.X += ball.Vx * dt + 0.5 * ball.accx * dt * dt;
+	ball.Y += ball.Vy * dt + 0.5 * ball.accy * dt * dt;
+	ball.Vx += ball.accx * dt;
+	ball.Vy += ball.accy * dt;
 }
 
 void ModulePhysics::integratorVerletPlayer(Player_Cannon& player, float dt)

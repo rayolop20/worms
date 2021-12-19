@@ -20,6 +20,9 @@ public:
 	float Delta = 1.0f / 16.0f;
 	bool shot = false;
 
+	float countX = 0;
+	float countY = 0;
+
 	class Ball
 	{
 	public:
