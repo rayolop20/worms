@@ -33,6 +33,7 @@ int main(int argc, char ** argv)
 
 	while (state != MAIN_EXIT)
 	{
+
 		auto start = chrono::steady_clock::now();
 		switch (state)
 		{
@@ -93,6 +94,17 @@ int main(int argc, char ** argv)
 		auto CelapsetTime = chrono::duration_cast<chrono::milliseconds>(end - start).count();
 		if (dt - CelapsetTime > 0.0f) {
 			Sleep(dt - CelapsetTime);
+		}
+		if (App->input->GetKey(SDL_SCANCODE_F11) == KEY_DOWN)
+		{
+			if (dt == 16.0f)
+			{
+				dt = 33.f;
+			}
+			else
+			{
+				dt = 16.0f;
+			}
 		}
 	}
 
