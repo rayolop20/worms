@@ -115,8 +115,10 @@ update_status ModulePhysics::Update() {
 			float fgx = ball.mass * 0.0;
 			float fgy = ball.mass * 10.0; // Let's assume gravity is constant and downwards
 
-			ball.fx += fgx;
-			ball.fy += fgy;
+			if (grav == true) {
+				ball.fx += fgx;
+				ball.fy += fgy;
+			}
 		}
 
 		//2# Llei newton F=m*a
@@ -203,11 +205,15 @@ update_status ModulePhysics::Update() {
 		}
 
 		//Add impulse force
-		ball.accx += ball.fimpx;
-		ball.accy += ball.fimpy;
+		if (ball.fimp == true) {
+			ball.accx += ball.fimpx;
+			ball.accy += ball.fimpy;
+		}
 		//add drag force
-		ball.accx += ball.fdragx;
-		ball.accy += ball.fdragy;
+		if (ball.fdrag == true) {
+			ball.accx += ball.fdragx;
+			ball.accy += ball.fdragy;
+		}
 
 		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 		{
@@ -245,8 +251,10 @@ update_status ModulePhysics::Update() {
 			//gravetat * volum submergit * densitat fluid * coeficient
 		}
 
-		ball.accy += ball.buoyancy + ball.buoyancyDragY;
-		ball.accx += ball.buoyancyDragX;
+		if (ball.buoyancy_ == true) {
+			ball.accy += ball.buoyancy + ball.buoyancyDragY;
+			ball.accx += ball.buoyancyDragX;
+		}
 
 		if (ball.physenable == true && ball.physenableF2 == true)
 		{

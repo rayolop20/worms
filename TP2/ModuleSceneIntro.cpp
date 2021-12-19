@@ -78,7 +78,7 @@ update_status ModuleSceneIntro::Update()
 	{
 		App->physics->Player.dead = false;
 		App->physics->Player2.dead = false;
-	}	
+	}
 	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {//Disenable all the forces (pause)
 		if (App->physics->ball.physenableF2 == false) {
 			App->physics->ball.physenableF2 = true;
@@ -113,7 +113,39 @@ update_status ModuleSceneIntro::Update()
 			App->renderer->DrawCircle(200, 100, 100, 250, 250, 250);
 		}		
 	}
-	
+	if (App->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN) {//enable/disable gravity
+		if (App->physics->grav == false) {
+			App->physics->grav = true;
+		}
+		else {
+			App->physics->grav = false;
+		}
+	}
+	if (App->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN) {//enable/disable impulse force
+		if (App->physics->ball.fimp == false) {
+			App->physics->ball.fimp = true;
+		}
+		else {
+			App->physics->ball.fimp = false;
+		}
+	}
+	if (App->input->GetKey(SDL_SCANCODE_F7) == KEY_DOWN) {//enable/disable buoyancy forces
+		if (App->physics->ball.buoyancy_ == false) {
+			App->physics->ball.buoyancy_ = true;
+		}
+		else {
+			App->physics->ball.buoyancy_ = false;
+		}
+	}
+	if (App->input->GetKey(SDL_SCANCODE_F8) == KEY_DOWN) {//enable/disable buoyancy forces
+		if (App->physics->ball.fdrag == false) {
+			App->physics->ball.fdrag = true;
+		}
+		else {
+			App->physics->ball.fdrag = false;
+		}
+	}
+
 	return UPDATE_CONTINUE;
 }
 

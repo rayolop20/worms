@@ -39,15 +39,17 @@ public:
 		//impulse force
 		float fimpx;
 		float fimpy;
+		bool fimp = true;
 
 		//accel
 		float accx;
 		float accy;
 
 
-		//buoyancy
+		//buoyancy force
 		float buoyancy;
 		float Vsub;
+		bool buoyancy_ = true;
 
 		//mass
 		float mass;
@@ -65,9 +67,11 @@ public:
 		//drag forces
 		float fdragx;
 		float fdragy;
+		bool fdrag = true;
 		//Hydrodynamics
 		float buoyancyDragX;
 		float buoyancyDragY;
+		bool buoyancyDrag;
 
 		//has fisic enable?
 		bool physenable = false;
@@ -171,6 +175,7 @@ public:
 
 	float waterDensity;
 	
+	bool grav = true;
 
 	void integratorVerletBall(Ball& ball, float dt);
 	void integratorVerletPlayer(Player_Cannon& player, float dt);
