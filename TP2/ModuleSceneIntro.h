@@ -66,6 +66,10 @@ public:
 	SDL_Texture* Agua;
 	SDL_Texture* PowerUp;
 	SDL_Texture* paracaigudes;
+	SDL_Texture* explosion1;
+	SDL_Texture* explosion2;
+	SDL_Texture* explosion3;
+	SDL_Texture* explosion4;
 	
 
 	PhysBody* background;

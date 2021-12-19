@@ -183,29 +183,31 @@ update_status ModulePhysics::Update() {
 
 			//ball.fimpy = -1000;
 		}
-		if ((App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN || ball.parachute == true) && (ball.Y > ball.prev_positionY)) {
+		if (ball.physenable == true) {
+			if ((App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN || ball.parachute == true) && (ball.Y > ball.prev_positionY)) {
 
-			ball.parachute = true;
-			SDL_Rect parachueRect = { ball.X - 2.5 * ball.radi,ball.Y - 4.5 * ball.radi,ball.radi * 5,ball.radi };
-			if (ball.rectenable == true) {
-				App->renderer->DrawQuad(parachueRect, 0, 255, 0);
+				ball.parachute = true;
+				SDL_Rect parachueRect = { ball.X - 2.5 * ball.radi,ball.Y - 4.5 * ball.radi,ball.radi * 5,ball.radi };
+				if (ball.rectenable == true) {
+					App->renderer->DrawQuad(parachueRect, 0, 255, 0);
+				}
+
+				ball.fdragy = ball.surfaceRect / 5 - ball.mass * 0.3;
+
+				if (ball.X < ball.prev_positionX) {
+					ball.fdragx = ball.surfaceRect / 50 + ball.mass * 0.1;
+				}
+				if (ball.X > ball.prev_positionX) {
+					ball.fdragx = -ball.surfaceRect / 50 - ball.mass * 0.1;
+				}
+				/*if(ball.Vy <= ball.prev_velocityX) {
+					App->renderer->DrawCircle(400, 200, 100, 255, 255, 255);
+				}*/
+
+
 			}
-			
-
-			ball.fdragy = ball.surfaceRect / 5 - ball.mass * 0.3;
-
-			if (ball.X < ball.prev_positionX) {
-				ball.fdragx = ball.surfaceRect / 50 + ball.mass * 0.1;
-			}
-			if (ball.X > ball.prev_positionX) {
-				ball.fdragx = -ball.surfaceRect / 50 - ball.mass * 0.1;
-			}
-			/*if(ball.Vy <= ball.prev_velocityX) {
-				App->renderer->DrawCircle(400, 200, 100, 255, 255, 255);
-			}*/
-
-
 		}
+		
 
 		//Add impulse force
 		if (ball.fimp == true) {
@@ -320,7 +322,7 @@ update_status ModulePhysics::Update() {
 			}
 
 		}
-		if (App->player->Explosion_Count > 20)
+		if (App->player->Explosion_Count >= 20)
 		{
 			App->player->Explosion = true;
 		}
@@ -434,50 +436,57 @@ void ModulePhysics::DrawColisions()
 void ModulePhysics::OnColision(Ball& ball, float walls[])
 {//0,600,1100,400
 	for (int i = 0; i < 16; i += 4) {
-		if (ball.X > walls[i] && ball.X  < walls[i] + walls[i+2] && ball.Y > walls[i + 1] - 10 && ball.Y < walls[i + 1] + walls[i + 3] - 10
+		if (ball.X > walls[i] && ball.X  < walls[i] + walls[i + 2] && ball.Y > walls[i + 1] - 10 && ball.Y < walls[i + 1] + walls[i + 3] - 10
 			|| ball.X > walls[i] && ball.X < walls[i] + walls[i + 2] && ball.Y > walls[i + 1] && ball.Y < walls[i + 1] + walls[i + 3]) {
-			
-			if ((ball.X > walls[i] + 10 && ball.X < walls[i] + walls[i + 2] - 10 && ball.Y - ball.radi > walls[i + 1] - 10 && ball.Y + ball.radi < walls[i + 1] + walls[i + 3] +  10)
+			if (ball.parachute == false) {
+				App->player->Explosion_Count++;
+			}
+			else {
+				App->player->Explosion_Count += 20;
+			}
+			if ((ball.X > walls[i] + 10 && ball.X < walls[i] + walls[i + 2] - 10 && ball.Y - ball.radi > walls[i + 1] - 10 && ball.Y + ball.radi < walls[i + 1] + walls[i + 3] + 10)
 				|| (ball.X > walls[i] + 10 && ball.X < walls[i] + walls[i + 2] - 10 && ball.Y > walls[i + 1] - 10 && ball.Y < walls[i + 1] + walls[i + 3] + 10)) {
-				if (ball.Y > walls[i+1] + walls[i+3] -10) {
+
+				if (ball.Y > walls[i + 1] + walls[i + 3] - 10) {
 					ball.Y += 2;
 				}
 				else {
 					ball.Y -= 2;
 				}
-				
+
 				ball.Vy *= -ball.cs2;
 				ball.Vx *= ball.cs1;
 				App->renderer->DrawCircle(100, 100, 50, 250, 250, 250);
+
+
+			}
+
+			if (ball.X > walls[i] - 10 && ball.X < walls[i] + walls[i + 2] + 10 && ball.Y > walls[i + 1] && ball.Y < walls[i + 1] + walls[i + 3] - 10) {
+				if (ball.X > walls[i] + walls[i + 2] - 10) {
+					ball.X += 2;
+				}
+				else {
+					ball.X -= 2;
+				}
+
+				ball.Vx *= -ball.cs2;
+				ball.Vy *= ball.cs1;
+				App->renderer->DrawCircle(200, 100, 100, 250, 250, 250);
 				App->player->Explosion_Count++;
 			}
-			
-		if (ball.X > walls[i] -10 && ball.X < walls[i] + walls[i+2] +10 && ball.Y > walls[i+1] && ball.Y < walls[i+1] + walls[i+3] - 10) {
-			if (ball.X > walls[i] + walls[i+2]-10) {
-				ball.X += 2;
-			}
-			else {
-				ball.X -= 2;
-			}
-			
-			ball.Vx *= -ball.cs2;
-			ball.Vy *= ball.cs1;
-			App->renderer->DrawCircle(200, 100, 100, 250, 250, 250);
-			App->player->Explosion_Count++;
+
 		}
-	
-	}
-		for(int i = 0; i < 4; i += 4) {
+		for (int i = 0; i < 4; i += 4) {
 			if (ball.X > water[i] && ball.X  < water[i] + water[i + 2] && ball.Y > water[i + 1] && ball.Y < water[i + 1] + water[i + 3]) {
 				App->renderer->DrawCircle(100, 300, 50, 0, 0, 255);
 				ball.buoyancy_enable = true;
-				if (ball.Y - ball.radi < water[i + 1] && ball.Y <= water[i+1]) {
+				ball.parachute = false;
+				if (ball.Y - ball.radi < water[i + 1] && ball.Y <= water[i + 1]) {
 					ball.Vsub = (ball.Y + ball.radi - water[i + 1]) * 2 * ball.radi;
-					
 				}
-				if (ball.Y - 2*ball.radi >= water[i + 1]) {
-					ball.Vsub = ((ball.Y + ball.radi - water[i + 1]) - (ball.Y - ball.radi - water[i+1])) * 2 * ball.radi;
-				}	
+				if (ball.Y - 2 * ball.radi >= water[i + 1]) {
+					ball.Vsub = ((ball.Y + ball.radi - water[i + 1]) - (ball.Y - ball.radi - water[i + 1])) * 2 * ball.radi;
+				}
 				if (ball.Y > 510 && ball.Y < 512)
 				{
 					App->player->Explosion_Count++;
@@ -487,11 +496,11 @@ void ModulePhysics::OnColision(Ball& ball, float walls[])
 				ball.buoyancy_enable = false;
 			}
 
-		
-		}
-}
 
-}void ModulePhysics::OnColisionPPup(Ball& ball, float PPup[])
+		}
+	}
+}
+void ModulePhysics::OnColisionPPup(Ball& ball, float PPup[])
 {//0,600,1100,400
 	for (int i = 0; i < 4; i += 4) {
 		if (ball.X > PPup[i] && ball.X  < PPup[i] + PPup[i + 2] && ball.Y > PPup[i + 1] - 10 && ball.Y < PPup[i + 1] + PPup[i + 3] - 10

@@ -27,6 +27,10 @@ bool ModuleSceneIntro::Start()
 	Agua = App->textures->Load("Assets/Agua.png");
 	PowerUp = App->textures->Load("Assets/Granada_Bonus.png");
 	paracaigudes = App->textures->Load("Assets/parachute1.png");
+	explosion1 = App->textures->Load("Assets/explosion2.png");
+	explosion2 = App->textures->Load("Assets/explosion3.png");
+	explosion3 = App->textures->Load("Assets/water_explosion1.png");
+	explosion4 = App->textures->Load("Assets/water_explosion2.png");
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
 	return ret;
@@ -56,6 +60,18 @@ update_status ModuleSceneIntro::Update()
 		}
 		if (App->physics->ball.parachute == true) {
 			App->renderer->Blit(paracaigudes, App->physics->ball.X - 17, App->physics->ball.Y - 50, NULL);
+		}
+		if (App->player->Explosion == true && App->physics->ball.radi == 5) {
+			App->renderer->Blit(explosion1, App->physics->ball.X - 15, App->physics->ball.Y - 20, NULL);
+		}
+		if (App->player->Explosion == true && App->physics->ball.radi == 5 && App->physics->ball.buoyancy_enable == true) {
+			App->renderer->Blit(explosion3, App->physics->ball.X - 25, App->physics->ball.Y - 30, NULL);
+		}
+		if (App->player->Explosion == true && App->physics->ball.radi != 5) {
+			App->renderer->Blit(explosion2, App->physics->ball.X - 25, App->physics->ball.Y - 30, NULL);
+		}
+		if (App->player->Explosion == true && App->physics->ball.radi != 5 && App->physics->ball.buoyancy_enable == true) {
+			App->renderer->Blit(explosion4, App->physics->ball.X - 45, App->physics->ball.Y - 70, NULL);
 		}
 	}
 	
