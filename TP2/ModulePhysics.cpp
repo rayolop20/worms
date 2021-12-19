@@ -297,18 +297,24 @@ update_status ModulePhysics::Update() {
 				}
 				Player.Angle = 0;
 				Player2.Angle = 0;
-				ball.fimpx = 0;
+				ball.Vx = 0;
+				ball.Vy = 0;
 				ball.fimpy = 0;
+				ball.fimpx = 0;
+				ball.accx = 0;
+				ball.accy = 0;
 				ball.physenable = false;
 				if (App->player->players == true ) {//Canviar de jugador
 					App->player->players = false;
 					shot = false;
 					App->player->Explosion_Count = 0;
+					ball.parachute = false;
 				}
 				else if (App->player->players == false) {//Canviar de jugador
 					App->player->players = true;
 					shot = false;
 					App->player->Explosion_Count = 0;
+					ball.parachute = false;
 				}
 				App->player->Explosion = false;
 			}
