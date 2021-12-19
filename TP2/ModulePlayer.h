@@ -40,4 +40,5 @@ public:
 	SDL_Texture* ball2 = nullptr;
 	SDL_Texture* Tank2 = nullptr;
 
+
 };

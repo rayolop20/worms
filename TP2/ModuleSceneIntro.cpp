@@ -26,6 +26,7 @@ bool ModuleSceneIntro::Start()
 	Wall = App->textures->Load("Assets/Wall.png");
 	Agua = App->textures->Load("Assets/Agua.png");
 	PowerUp = App->textures->Load("Assets/Granada_Bonus.png");
+	paracaigudes = App->textures->Load("Assets/parachute1.png");
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
 	return ret;
@@ -53,7 +54,9 @@ update_status ModuleSceneIntro::Update()
 		{
 			App->renderer->Blit(PowerUp, 700, 200, NULL);
 		}
-	
+		if (App->physics->ball.parachute == true) {
+			App->renderer->Blit(paracaigudes, App->physics->ball.X - 17, App->physics->ball.Y - 50, NULL);
+		}
 	}
 	
 	if (Fscreen == true)
