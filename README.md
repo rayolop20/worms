@@ -1,42 +1,41 @@
-# worms
-This Worms game is a original game maked for Pol Maresch, Alex garcia and Pau olmos
+# WORMS
+This Worms game is a original game developed by Pol Maresch, Alex Garcia and Pau Olmos
 
 Source Code: https://github.com/MaralGS/Pintball-Fisica
 
 ## Developers:
 
--Alex Garcia Selma ([Github])(https://github.com/MaralGS))
--Pol Maresch Marxuach ([Github])(https://github.com/rayolop20))
--Pau Olmos Serrano ([Github])(https://github.com/PauOlmos))
+* Alex Garcia Selma ([Github])(https://github.com/MaralGS))
+* Pol Maresch Marxuach ([Github])(https://github.com/rayolop20))
++ Pau Olmos Serrano ([Github])(https://github.com/PauOlmos))
 ## Controls:
- -A Key: ForceX Left move 
- -D key: ForceX Right move
- -S Key: ForceY Down move 
- -W Key:  ForceY Up move
- -Left Key: Move Left players (1 o 2) 
- -Right Key: Move Right players (1 o 2)
- -F1 Key: Restart game
- -F2 Key: Enable/Disable Phisics ball
- -F3 Key: Enable/Disable Debug coliders
- -F4 Key: Enable/Disable Bonus (Big Ball)
- -F5 Key: Enable/Disable Gravity
- -F6 Key: Enable/Disable Forces Ball
- -F7 Key: Enable/Disable Buoyancy Phisics
- -F8 Key: Enable/Disable Phisics
- -F9 Key: Enable/Disable Move ball on the air (with W,A,S,D)
- -F11 Key: Put the game on 30 o 60 FPS (delta time to 1/16 ms or 1/33 ms)
- -Esc Key: Close game
+ * A Key: ForceX Left move 
+ * D key: ForceX Right move
+ * S Key: ForceY Down move 
+ * W Key: ForceY Up move
+ * Left Key: Move Left players (1 o 2) 
+ * Right Key: Move Right players (1 o 2)
+ * F1 Key: Restart game
+ * F2 Key: Enable/Disable Physics ball
+ * F3 Key: Enable/Disable Debug colliders
+ * F4 Key: Enable/Disable Bonus (Big Ball)
+ * F5 Key: Enable/Disable Gravity
+ * F6 Key: Enable/Disable Impulse forces
+ * F7 Key: Enable/Disable Buoyancy forces
+ * F8 Key: Enable/Disable Drag forces
+ * F9 Key: Enable/Disable Move ball on the air (with W,A,S,D)
+ * F11 Key: Put the game on 30 o 60 FPS (delta time to 1/16 ms or 1/33 ms)
+ * Esc Key: Close game
 
 ## Features:
  -If you hit all Ball Bumpers (static obstacle) you get 1 live extra
- -If you hit Ball Bumpers or Bumpers the ball bounces
- -When trow one ball, is created a wall by one sensor on the exit ball,
-  that makes you unable to return the ball to the starting position inadvertently.
+ -If you hit Ball Bumpers or Bumpers the ball bounces. When trow one ball, is created a wall by one sensor on the exit ball,
+ that makes you unable to return the ball to the starting position inadvertently.
  -Added original sounds
  -Score, Last Score and Highest score
  -Time step
 
-##How we maked the game:
+##How we made the game:
  We started making the map and adding walls and ball position, when we had that, then we started to make joins, the sticks and push ball joins, and there we
  had the firts problems, first of all the sticks colide with the walls and get stucked with them, we solve that separating sticks from rotation position.
  With push ball we had another problem, that somtimes stoped and didn't work, for solve that we needed to reduce and move the push walls and position, 
