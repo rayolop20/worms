@@ -270,23 +270,22 @@ update_status ModulePhysics::Update() {
 			{
 				//Block Ball when you throw it
 				//ball.lock = false;
+				if (ball.PowerUpAct == true) {
+					ball.PowerUp1++;
+				}
+				Player.Angle = 0;
+				Player2.Angle = 0;
+				ball.fimpx = 0;
+				ball.fimpy = 0;
 				ball.physenable = false;
 				if (App->player->players == true ) {//Canviar de jugador
 					App->player->players = false;
 					shot = false;
-					Player.Angle = 0;
-					Player2.Angle = 0;
-					ball.fx = 0;
-					ball.fy = 0;
 					App->player->Explosion_Count = 0;
 				}
 				else if (App->player->players == false) {//Canviar de jugador
 					App->player->players = true;
 					shot = false;
-					Player.Angle = 0;
-					Player2.Angle = 0;
-					ball.fx = 0;
-					ball.fy = 0;
 					App->player->Explosion_Count = 0;
 				}
 				App->player->Explosion = false;
@@ -297,6 +296,26 @@ update_status ModulePhysics::Update() {
 		{
 			App->player->Explosion = true;
 		}
+		if (ball.PowerUp1 == 2) {
+			LOG("%d", ball.PowerUp1);
+			ball.radi = 15;
+			ball.mass = 30;
+			ball.surface = ball.radi * 2 / 3;
+			//ball.mass = ball.surface * 5;
+			//ball.density = ball.mass * ball.surface;
+			ball.surfaceRect = ball.radi * 5 / 3;
+			App->renderer->DrawCircle(200, 100, 100, 250, 250, 250);
+		}
+		if (ball.PowerUp1 == 3) {
+			LOG("%d", ball.PowerUp1);
+			ball.radi = 5;
+			ball.surface = ball.radi * 2; // m^2
+			ball.mass = ball.surface * 5; // kg
+			ball.surfaceRect = ball.radi * 5;
+			ball.PowerUpAct = false;
+			ball.PowerUp1 = 0;
+		}
+
 
 	}
 	return UPDATE_CONTINUE;
@@ -449,13 +468,8 @@ void ModulePhysics::OnColision(Ball& ball, float walls[])
 	for (int i = 0; i < 4; i += 4) {
 		if (ball.X > PPup[i] && ball.X  < PPup[i] + PPup[i + 2] && ball.Y > PPup[i + 1] - 10 && ball.Y < PPup[i + 1] + PPup[i + 3] - 10
 			|| ball.X > PPup[i] && ball.X < PPup[i] + PPup[i + 2] && ball.Y > PPup[i + 1] && ball.Y < PPup[i + 1] + PPup[i + 3]) {
-				ball.radi = 15;
-				ball.mass = 30;
-				ball.surface = ball.radi * 2/3;
-				//ball.mass = ball.surface * 5;
-				//ball.density = ball.mass * ball.surface;
-				ball.surfaceRect = ball.radi * 5/3;
-				App->renderer->DrawCircle(200, 100, 100, 250, 250, 250);
+			ball.PowerUpAct = true;
+			//LOG("%d", ball.PowerUp1);250, 250);
 		}
 	}
 }
@@ -502,6 +516,12 @@ void ModulePhysics::OnColisionPlayers(Player_Cannon& player, Ball& ball, Player_
 					player2.Angle = 0;
 					ball.fx = 0;
 					ball.fy = 0;
+					ball.radi = 5;
+					ball.surface = ball.radi * 2; // m^2
+					ball.mass = ball.surface * 5; // kg
+					ball.surfaceRect = ball.radi * 5;
+					ball.PowerUpAct = false;
+					ball.PowerUp1 = 0;
 
 				}
 			}
@@ -524,6 +544,12 @@ void ModulePhysics::OnColisionPlayers(Player_Cannon& player, Ball& ball, Player_
 					player2.Angle = 0;
 					ball.fx = 0;
 					ball.fy = 0;
+					ball.radi = 5;
+					ball.surface = ball.radi * 2; // m^2
+					ball.mass = ball.surface * 5; // kg
+					ball.surfaceRect = ball.radi * 5;
+					ball.PowerUpAct = false;
+					ball.PowerUp1 = 0;
 
 				}
 			}

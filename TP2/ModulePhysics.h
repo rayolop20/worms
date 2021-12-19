@@ -81,6 +81,12 @@ public:
 		float prev_positionY;
 		float prev_velocityX;
 		float prev_velocityY;
+		//Powerup Active P1
+		int PowerUp1 = 0;
+		//Powerup Active P2
+		int PowerUp2 = 0;
+		//Powerup Active when touched
+		bool PowerUpAct = false;
 
 
 	}ball;
@@ -158,6 +164,7 @@ public:
 	float PowerUPP[4] = { 700,200, 40, 40 };
 
 	float waterDensity;
+	
 
 	void integratorVerletBall(Ball& ball, float dt);
 	void integratorVerletPlayer(Player_Cannon& player, float dt);
