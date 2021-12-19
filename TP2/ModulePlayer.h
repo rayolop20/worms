@@ -33,6 +33,8 @@ public:
 	int Explosion_Count = 0;
 	bool players = false;
 	bool Explosion = false;
+	bool move = true;
+	bool moveControl = false;
 	SDL_Texture* Cannon = nullptr;
 	SDL_Texture* Tank = nullptr;
 	SDL_Texture* Cannon2 = nullptr;

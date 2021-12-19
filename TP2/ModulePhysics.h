@@ -174,7 +174,7 @@ public:
 
 	float water[4] = { 350,510,250,500 };
 
-	float PowerUPP[4] = { 700,200, 40, 40 };
+	float PowerUPP[4] = { 500,200, 40, 40 };
 
 	float waterDensity;
 	

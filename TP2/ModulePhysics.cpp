@@ -128,59 +128,63 @@ update_status ModulePhysics::Update() {
 
 		//3#integrate
 
-		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && ball.lock == false && countX <= 2000) {
+		if (App->player->move == true || App->player->moveControl == false)
+		{
+			if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && ball.lock == false && countX <= 2000) {
 
-			ball.fimpx += 50;
-			countX += 50;
-			//ball.fimpx = 1000;
+				ball.fimpx += 50;
+				countX += 50;
+				//ball.fimpx = 1000;
+			}
+			if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && ball.lock == false && countX >= -2000) {
+
+				ball.fimpx -= 50;
+				countX -= 50;
+				//ball.fimpx = 1000;
+			}
+			if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT && ball.lock == false && countY <= 3500) {
+				ball.fimpy -= 50;
+				countY += 50;
+				if (App->player->players == false)
+				{
+					if (Player.Angle > -60)
+					{
+						Player.Angle--;
+					}
+				}
+
+				if (App->player->players == true)
+				{
+					if (Player2.Angle < 60)
+					{
+						Player2.Angle++;
+					}
+
+				}
+				//ball.fimpy = -1000;
+			}
+
+			if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT && ball.lock == false && countY >= -3500) {
+				ball.fimpy += 50;
+				countY -= 50;
+				if (App->player->players == false)
+				{
+					if (Player.Angle < 20)
+					{
+						Player.Angle++;
+					}
+				}
+
+				if (App->player->players == true)
+				{
+					if (Player2.Angle > -20)
+					{
+						Player2.Angle--;
+					}
+				}
+
 		}
-		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && ball.lock == false && countX >= -2000) {
-
-			ball.fimpx -= 50;
-			countX -= 50;
-			//ball.fimpx = 1000;
-		}
-		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT && ball.lock == false && countY <= 3500) {
-			ball.fimpy -= 50;
-			countY += 50;
-			if (App->player->players == false)
-			{
-				if (Player.Angle > -60)
-				{
-					Player.Angle--;
-				}
-			}
-
-			if (App->player->players == true)
-			{
-				if (Player2.Angle < 60)
-				{
-					Player2.Angle++;
-				}
-
-			}
-			//ball.fimpy = -1000;
-		}
-
-		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT && ball.lock == false && countY >= -3500) {
-			ball.fimpy += 50;
-			countY -= 50;
-			if (App->player->players == false)
-			{
-				if (Player.Angle < 20)
-				{
-					Player.Angle++;
-				}
-			}
-
-			if (App->player->players == true)
-			{
-				if (Player2.Angle > -20)
-				{
-					Player2.Angle--;
-				}
-			}
-
+		
 			//ball.fimpy = -1000;
 		}
 		if (ball.physenable == true) {
@@ -227,6 +231,7 @@ update_status ModulePhysics::Update() {
 			ball.lock = false;
 			countY = 0;
 			countX = 0;
+			App->player->move = false;
 	
 		}
 		if (ball.rectenable == true) {
@@ -311,12 +316,14 @@ update_status ModulePhysics::Update() {
 					shot = false;
 					App->player->Explosion_Count = 0;
 					ball.parachute = false;
+					App->player->move = true;
 				}
 				else if (App->player->players == false) {//Canviar de jugador
 					App->player->players = true;
 					shot = false;
 					App->player->Explosion_Count = 0;
 					ball.parachute = false;
+					App->player->move = true;
 				}
 				App->player->Explosion = false;
 			}
@@ -424,7 +431,8 @@ void ModulePhysics::DrawColisions()
 	SDL_Rect rect5 = { -10,0,10,1000 };
 	App->renderer->DrawQuad(rect5, 25, 25, 0);
 	SDL_Rect rect6 = { 1024,0,10,1000 };
-	SDL_Rect PPup = { 700,200, 40, 40 };
+
+	SDL_Rect PPup = { 500,200, 40, 40 };
 	App->renderer->DrawQuad(PPup, 0, 0, 255);
 
 		SDL_Rect water = { 350,510,250,500 };

@@ -56,7 +56,7 @@ update_status ModuleSceneIntro::Update()
 		App->renderer->Blit(Wall, 600, 500, NULL);
 		if (App->physics->ball.PowerUpAct == false)
 		{
-			App->renderer->Blit(PowerUp, 700, 200, NULL);
+			App->renderer->Blit(PowerUp, 500, 200, NULL);
 		}
 		if (App->physics->ball.parachute == true) {
 			App->renderer->Blit(paracaigudes, App->physics->ball.X - 17, App->physics->ball.Y - 50, NULL);
@@ -162,6 +162,14 @@ update_status ModuleSceneIntro::Update()
 		}
 		else {
 			App->physics->ball.fdrag = false;
+		}
+	}
+	if (App->input->GetKey(SDL_SCANCODE_F9) == KEY_DOWN) {//enable/disable drag forces
+		if (App->player->moveControl == false) {
+			App->player->moveControl = true;
+		}
+		else {
+			App->player->moveControl = false;
 		}
 	}
 
